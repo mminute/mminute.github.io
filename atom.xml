@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[A PlanarFe Adventure]]></title>
+  <link href="http://mminute.github.io/atom.xml" rel="self"/>
+  <link href="http://mminute.github.io/"/>
+  <updated>2015-06-04T21:42:45-04:00</updated>
+  <id>http://mminute.github.io/</id>
+  <author>
+    <name><![CDATA[Mason Jennings]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[My First Post on Octopress]]></title>
+    <link href="http://mminute.github.io/blog/2015/06/04/my-first-post-on-octopress/"/>
+    <updated>2015-06-04T21:34:41-04:00</updated>
+    <id>http://mminute.github.io/blog/2015/06/04/my-first-post-on-octopress</id>
+    <content type="html"><![CDATA[<p>&ldquo;Hello World!  It&rsquo;s me, your humble narrator!&rdquo;</p>
+]]></content>
+  </entry>
+  
+</feed>
