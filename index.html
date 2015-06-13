@@ -9,8 +9,7 @@
   <meta name="author" content="Mason Jennings">
 
   
-  <meta name="description" content="&ldquo;Hello World! It&rsquo;s me, your humble narrator!- update!!!!&rdquo;
-">
+  <meta name="description" content="The speed of light. Avogadro&rsquo;s number. Planck&rsquo;s constant. The mass of an electron. I thought that I understood constants. Unchanging. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,7 +71,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/06/04/my-first-post-on-octopress/">My First Post on Octopress</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/06/04/my-first-post-on-octopress/">When Constants Are NOT Constant</a></h1>
     
     
       <p class="meta">
@@ -88,7 +87,256 @@
   </header>
 
 
-  <div class="entry-content"><p>&ldquo;Hello World!  It&rsquo;s me, your humble narrator!- update!!!!&rdquo;</p>
+  <div class="entry-content"><p>The speed of light.</p>
+
+<p>Avogadro&rsquo;s number.</p>
+
+<p>Planck&rsquo;s constant.</p>
+
+<p>The mass of an electron.</p>
+
+<p>I thought that I understood constants.  Unchanging. Immutable.  Then Ruby went and fucked it up.</p>
+
+<p>My understanding of constants in Ruby was that they are represented by a capitalized bareword (often all upper case) which, once defined, would cause Ruby to pitch a fit if you were to try to reassign its value.  Makes sense, right?  So when I saw this I was a bit confused:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Shoe
+</span><span class='line'>  BRANDS = []
+</span><span class='line'>
+</span><span class='line'>  def initialize(brand)
+</span><span class='line'>    @brand = brand
+</span><span class='line'>    if BRANDS.include?(@brand) == false
+</span><span class='line'>    BRANDS &lt;&lt; @brand
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Wait.. whaaaaaa????</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>BRANDS &lt;&lt; @brand</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Aren&rsquo;t we changing what BRAND represents?
+Yes and no.
+We are NOT changing the object to which the bareword &ldquo;BRANDS&rdquo; points.
+We ARE changing the contents of that array, or what I formerly thought of as the value for &ldquo;BRANDS&rdquo;.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>BRANDS = []
+</span><span class='line'>BRANDS.object_id #=&gt; 70132206506080
+</span><span class='line'>BRANDS &lt;&lt; "LA Gear"
+</span><span class='line'>BRANDS &lt;&lt; "FILA"
+</span><span class='line'>BRANDS #=&gt; ["LA Gear", "FILA"]
+</span><span class='line'>BRANDS.object_id #=&gt; 70132206506080</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But, wait!  There&rsquo;s more!</p>
+
+<p>So, while the value of PI might be the same in your home as it is in Intercourse, Pennsylvania,  Fucking, Austria,  and Wetwang, Yorkshire UK (all real places, btw), a constant may not be the same everywhere in your code.  Let&rsquo;s try this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["mmmmmm","piiiiiiiieeeeeee"]
+</span><span class='line'>
+</span><span class='line'>class TastyStuff
+</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
+</span><span class='line'>
+</span><span class='line'>  def initialize(name)
+</span><span class='line'>    if PIE.include?(name)
+</span><span class='line'>      puts "Nom!"
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
+</span><span class='line'>
+</span><span class='line'>PIE #=&gt; ["mmmmmm","piiiiiiiieeeeeee"]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So now we have two &ldquo;PIE"s?
+Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["mmmmmm","piiiiiiiieeeeeee"]
+</span><span class='line'>
+</span><span class='line'>class TastyStuff
+</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
+</span><span class='line'>
+</span><span class='line'>  def initialize(name)
+</span><span class='line'>    if PIE.include?(name)
+</span><span class='line'>      puts "Nom!"
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
+</span><span class='line'>
+</span><span class='line'>PIE #=&gt; ["mmmmmm","piiiiiiiieeeeeee"]
+</span><span class='line'>TastyStuff::PIE #=&gt; ["Pecan", "Apple", "Pumpkin"]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What happens if we get rid of the &ldquo;PIE&rdquo; inside the class?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["Pecan", "Apple", "Pumpkin"]
+</span><span class='line'>
+</span><span class='line'>class TastyStuff
+</span><span class='line'>  def initialize(name)
+</span><span class='line'>    if PIE.include?(name)
+</span><span class='line'>      puts "Nom!"
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
+</span><span class='line'>
+</span><span class='line'>PIE #=&gt; ["Pecan", "Apple", "Pumpkin"]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But if we reverse it&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class TastyStuff
+</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
+</span><span class='line'>
+</span><span class='line'>  def initialize(name)
+</span><span class='line'>    if PIE.include?(name)
+</span><span class='line'>      puts "Nom!"
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
+</span><span class='line'>
+</span><span class='line'>PIE #=&gt; uninitialized constant PIE (NameError)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sooooooo&hellip; now we can&rsquo;t call &ldquo;PIE&rdquo; from outside of the class?   It only works from within the class?  I guess we could call it a &lsquo;Class Constant&rsquo;?  Yeah, let&rsquo;s call it a Class Constant because, well, that&rsquo;s what it&rsquo;s called.</p>
+
+<hr />
+
+<p>Let&rsquo;s summarize:</p>
+
+<ul>
+<li>Constants can only be set to point to an object once.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
+</span><span class='line'>LYRICS = ["Hey Hey Hey, Goodbye"]
+</span><span class='line'>#=&gt;2: warning: already initialized constant LYRICS
+</span><span class='line'>#=&gt;1: warning: previous definition of LYRICS was here</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>The object to which a constant points CAN be changed.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
+</span><span class='line'>LYRICS &lt;&lt; "Hey Hey Hey, Goodbye"
+</span><span class='line'>#=&gt; ["Nah Nah Nah Nah" , "Hey Hey Hey, Goodbye"]</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Constants have a scope / are namespaced.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
+</span><span class='line'>
+</span><span class='line'>class Tunes
+</span><span class='line'>  LYRICS = ["Hey Hey Hey, Goodbye"]
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>LYRICS #=&gt; ["Nah Nah Nah Nah"]
+</span><span class='line'>Tunes::LYRICS #=&gt; ["Hey Hey Hey, Goodbye"]</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
   
   
@@ -109,7 +357,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/06/04/my-first-post-on-octopress/">My First Post on Octopress</a>
+        <a href="/blog/2015/06/04/my-first-post-on-octopress/">When Constants Are NOT Constant</a>
       </li>
     
   </ul>

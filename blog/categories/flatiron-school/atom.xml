@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Flatiron&nbsp;school | A PlanarFe Adventure]]></title>
   <link href="http://mminute.github.io/blog/categories/flatiron-school/atom.xml" rel="self"/>
   <link href="http://mminute.github.io/"/>
-  <updated>2015-06-13T17:05:51-04:00</updated>
+  <updated>2015-06-13T19:22:30-04:00</updated>
   <id>http://mminute.github.io/</id>
   <author>
     <name><![CDATA[Mason Jennings]]></name>
@@ -14,11 +14,181 @@
 
   
   <entry>
-    <title type="html"><![CDATA[My First Post on Octopress]]></title>
+    <title type="html"><![CDATA[When Constants Are NOT Constant]]></title>
     <link href="http://mminute.github.io/blog/2015/06/04/my-first-post-on-octopress/"/>
     <updated>2015-06-04T21:34:41-04:00</updated>
     <id>http://mminute.github.io/blog/2015/06/04/my-first-post-on-octopress</id>
-    <content type="html"><![CDATA[<p>&ldquo;Hello World!  It&rsquo;s me, your humble narrator!- update!!!!&rdquo;</p>
+    <content type="html"><![CDATA[<p>The speed of light.</p>
+
+<p>Avogadro&rsquo;s number.</p>
+
+<p>Planck&rsquo;s constant.</p>
+
+<p>The mass of an electron.</p>
+
+<p>I thought that I understood constants.  Unchanging. Immutable.  Then Ruby went and fucked it up.</p>
+
+<p>My understanding of constants in Ruby was that they are represented by a capitalized bareword (often all upper case) which, once defined, would cause Ruby to pitch a fit if you were to try to reassign its value.  Makes sense, right?  So when I saw this I was a bit confused:</p>
+
+<pre><code>class Shoe
+  BRANDS = []
+
+  def initialize(brand)
+    @brand = brand
+    if BRANDS.include?(@brand) == false
+    BRANDS &lt;&lt; @brand
+    end
+  end
+end
+</code></pre>
+
+<p>Wait.. whaaaaaa????</p>
+
+<pre><code>BRANDS &lt;&lt; @brand
+</code></pre>
+
+<p>Aren&rsquo;t we changing what BRAND represents?
+Yes and no.
+We are NOT changing the object to which the bareword &ldquo;BRANDS&rdquo; points.
+We ARE changing the contents of that array, or what I formerly thought of as the value for &ldquo;BRANDS&rdquo;.</p>
+
+<pre><code>BRANDS = []
+BRANDS.object_id #=&gt; 70132206506080
+BRANDS &lt;&lt; "LA Gear"
+BRANDS &lt;&lt; "FILA"
+BRANDS #=&gt; ["LA Gear", "FILA"]
+BRANDS.object_id #=&gt; 70132206506080
+</code></pre>
+
+<p>But, wait!  There&rsquo;s more!</p>
+
+<p>So, while the value of PI might be the same in your home as it is in Intercourse, Pennsylvania,  Fucking, Austria,  and Wetwang, Yorkshire UK (all real places, btw), a constant may not be the same everywhere in your code.  Let&rsquo;s try this:</p>
+
+<pre><code>PIE = ["mmmmmm","piiiiiiiieeeeeee"]
+
+class TastyStuff
+  PIE = ["Pecan", "Apple", "Pumpkin"]
+
+  def initialize(name)
+    if PIE.include?(name)
+      puts "Nom!"
+    end
+  end
+end
+
+my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
+
+PIE #=&gt; ["mmmmmm","piiiiiiiieeeeeee"]
+</code></pre>
+
+<p>So now we have two &ldquo;PIE"s?
+Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
+
+<pre><code>PIE = ["mmmmmm","piiiiiiiieeeeeee"]
+
+class TastyStuff
+  PIE = ["Pecan", "Apple", "Pumpkin"]
+
+  def initialize(name)
+    if PIE.include?(name)
+      puts "Nom!"
+    end
+  end
+end
+
+my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
+
+PIE #=&gt; ["mmmmmm","piiiiiiiieeeeeee"]
+TastyStuff::PIE #=&gt; ["Pecan", "Apple", "Pumpkin"]
+</code></pre>
+
+<p>What happens if we get rid of the &ldquo;PIE&rdquo; inside the class?</p>
+
+<pre><code>PIE = ["Pecan", "Apple", "Pumpkin"]
+
+class TastyStuff
+  def initialize(name)
+    if PIE.include?(name)
+      puts "Nom!"
+    end
+  end
+end
+
+my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
+
+PIE #=&gt; ["Pecan", "Apple", "Pumpkin"]
+</code></pre>
+
+<p>But if we reverse it&hellip;</p>
+
+<pre><code>class TastyStuff
+  PIE = ["Pecan", "Apple", "Pumpkin"]
+
+  def initialize(name)
+    if PIE.include?(name)
+      puts "Nom!"
+    end
+  end
+end
+
+my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
+
+PIE #=&gt; uninitialized constant PIE (NameError)
+</code></pre>
+
+<p>Sooooooo&hellip; now we can&rsquo;t call &ldquo;PIE&rdquo; from outside of the class?   It only works from within the class?  I guess we could call it a &lsquo;Class Constant&rsquo;?  Yeah, let&rsquo;s call it a Class Constant because, well, that&rsquo;s what it&rsquo;s called.</p>
+
+<hr />
+
+<p>Let&rsquo;s summarize:</p>
+
+<ul>
+<li>Constants can only be set to point to an object once.
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = [&ldquo;Nah Nah Nah Nah&rdquo;]
+</span><span class='line'>LYRICS = [&ldquo;Hey Hey Hey, Goodbye&rdquo;]
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;=&gt;2: warning: already initialized constant LYRICS&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;=&gt;1: warning: previous definition of LYRICS was here&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;```&lt;/p&gt;&lt;/li&gt;
+</span><span class='line'>&lt;li&gt;The object to which a constant points CAN be changed.</span></code></pre></td></tr></table></div></figure>
+LYRICS = [&ldquo;Nah Nah Nah Nah&rdquo;]
+LYRICS &lt;&lt; &ldquo;Hey Hey Hey, Goodbye&rdquo;
+
+<h1>=> [&ldquo;Nah Nah Nah Nah&rdquo; , &ldquo;Hey Hey Hey, Goodbye&rdquo;]</h1>
+
+<p>```</p></li>
+<li>Constants have a scope / are namespaced.
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = [&ldquo;Nah Nah Nah Nah&rdquo;]&lt;/li&gt;
+</span><span class='line'>&lt;/ul&gt;
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;class Tunes
+</span><span class='line'>  LYRICS = [&ldquo;Hey Hey Hey, Goodbye&rdquo;]
+</span><span class='line'>end&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;LYRICS #=&gt; [&ldquo;Nah Nah Nah Nah&rdquo;]
+</span><span class='line'>Tunes::LYRICS #=&gt; [&ldquo;Hey Hey Hey, Goodbye&rdquo;]</span></code></pre></td></tr></table></div></figure></p>
 ]]></content>
   </entry>
   
