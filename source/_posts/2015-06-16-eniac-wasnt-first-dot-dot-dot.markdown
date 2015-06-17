@@ -50,7 +50,7 @@ And to compare the two, the Lorenz could be set to: 660,349, 198,000,000,000, 00
 
 So why haven’t we heard of Colossus?  Well, it was highly classified through the late 1970’s, long after ENIAC had been revealed to the public in 1946 and hailed as the first electronic ‘Giant Brain’.  It’s hard to unseat a 30 year-old reputation.  Furthermore, Churchill ordered all but two of the 11 machines destroyed shortly after V-E Day in 1945.  The remaining machines were used for training and research purposes before being scrapped a number of years later.
 
-As far as I can tell the only reason one might prefer ENIAC over Colossus is that it was the first example of a Turing complete machine, whatever that mean.  You’ll have to look that one up for yourself; it went a bit over my head.  Then again Professor Benjamin Wells of the Departments of Computer Science and Mathematics, University of San Francisco, has showed that a Universal Turing Machine could run on ten Colossus computers and argues that this means that Colossus satisfies the definition of Turing completeness. Soon, there’s that?
+As far as I can tell the only reason one might prefer ENIAC over Colossus is that it was the first example of a Turing complete machine, whatever that mean.  You’ll have to look that one up for yourself; it went a bit over my head.  Then again Professor Benjamin Wells of the Departments of Computer Science and Mathematics, University of San Francisco, has shown that a Universal Turing Machine could run on ten Colossus computers and argues that this means that Colossus satisfies the definition of Turing completeness. Soon, there’s that?
 
 Sources-
 This isn’t a scholarly work so I’m not going to go back and cite anything, but here are a few places that were helpful:
