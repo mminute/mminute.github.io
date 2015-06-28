@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>A PlanarFe Adventure</title>
+  <title>How to Build a Valueless Gem - A PlanarFe Adventure</title>
   <meta name="author" content="Mason Jennings">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mminute.github.io/">
+  <link rel="canonical" href="http://mminute.github.io/blog/2015/06/27/how-to-build-a-valueless-gem/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="A PlanarFe Adventure" type="application/atom+xml">
@@ -63,15 +63,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/06/27/how-to-build-a-valueless-gem/">How to Build a Valueless Gem</a></h1>
+      <h1 class="entry-title">How to Build a Valueless Gem</h1>
     
     
       <p class="meta">
@@ -87,7 +84,7 @@
   </header>
 
 
-  <div class="entry-content"><p><img src="http://www.nysun.com/pics/6372.jpg" width="500" height="500" title="Tracy Hall" alt="H. Tracy Hall with his synthetic diamond machine."></p>
+<div class="entry-content"><p><img src="http://www.nysun.com/pics/6372.jpg" width="500" height="500" title="Tracy Hall" alt="H. Tracy Hall with his synthetic diamond machine."></p>
 
 <p>What are gems made out of?  Code.  (dammit Avi…)</p>
 
@@ -366,378 +363,46 @@
 <p>[Engineering Lunch Series] Step-by-Step Guide to Building Your First Ruby Gem
 <a href="https://quickleft.com/blog/engineering-lunch-series-step-by-step-guide-to-building-your-first-ruby-gem/">https://quickleft.com/blog/engineering-lunch-series-step-by-step-guide-to-building-your-first-ruby-gem/</a></p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/06/16/eniac-wasnt-first-dot-dot-dot/">ENIAC Wasn't First?...</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-06-16T19:13:20-04:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:13 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Frontal_view_of_the_reconstructed_Colossus_at_The_National_Museum_of_Computing%2C_Bletchley_Park.jpg"></p>
-
-<p>Try taking a tour of an engineering building at Penn without someone telling you about how ENIAC was the first digital computer.  Seriously, try it.  I bet you a million dollars they mention it.  Seriously, bet me.  Please?  I could use the cash or there may be a significant increase in my ramen consumption quite shortly.  No?  Fine.  Whatever.</p>
-
-<p>I believed those professors and tour guides because 1) I figured that they knew what they were talking about, and 2) I’d seen it in books.  Everything in books is true, right? #bible.  Turns out tour_guides.liar_liar_pants_on_fire? returns true.</p>
-
-<p>There is a YouTube channel called ‘Computerphile’ that puts out videos digging down into some of the minutiae of the history and inner workings of those magical thinking boxes that we all carry around.  Ever wonder about the discrete cosine transformation used to encode jpeg images or the significance of the Altair 8800? No?  Well if you did you could hear all about it from experts in the fields.  It, along with it’s sister channel ‘Numberphile’, are worth a look.</p>
-
-<p>Anyway, back to the issue at hand… I ran across one of Computerphile’s vids this past Monday.  The topic: Colossus, the world’s first (at least partially) programmable electronic digital computer.  The prototype, Colossus Mk 1 was operational in December of 1943 and put into service February 5, 1944, preceding ENIAC (completed in November of 1945) by nearly two years.  Bonus points for having a way better name.</p>
-
-<iframe width="760" height="488" src="https://www.youtube.com/embed/9HH-asvLAj4" frameborder="0" allowfullscreen></iframe>
-
-
-<p>The Colossus was designed and built by engineer Tommy Flowers, assisted by William Chandler, with Sidney Broadhurst working on the auxiliary electromechanical parts at the Government Code and Cypher School (GC&amp;CS) in Bletchley Park in order to break the cryptography of the Lorenz SZ42 cipher machine used to encrypt messages transmitted by the German High Command and Army Commands.  Though the better known Enigma was more common (due to its greater portability), it was used more in the transmission of tactical information, while the Lorenz, a far more complex cipher, was used to securely transmit information of a more strategic nature; ‘securely’ at least until Colossus came along.</p>
-
-<p>Colossus was the first example of program-controlled logic, parallel processing, variable programming, hardware interrupts, optical reading of punched paper tape, and shift registers, all concepts that would become critical in the future development of computing.</p>
-
-<p>It is worth taking a moment to note how much more complex the challenge was facing Colossus in comparison to the challenge facing Turing’s ‘Victory' (not ‘Christoper’, sorry Cumberbatch) electromechanical computer.</p>
-
-<p>Enigma:
-3 rotors (Army and Air Force) or 4 rotors (Navy) with 26 settings each.  The three rotor version could be configured in:
-158,962,555,217,826,360,000 different ways.  Thats 159 million million million.</p>
-
-<p>Lorenz:
-12 Rotors, each with a different number of possible settings.</p>
-
-<p>Rotor Number => Possible settings.</p>
-
-<p>{1=> 43, 2=> 47, 3=> 51, 4=> 53, 5=> 59, 6=> 37, 7=> 61, 8=> 41, 9=> 31, 10=> 29, 11=> 26, 12=> 23}
-which combined to form:
-104, 970,795,887,142, 501,519,944,408, 859,713,937,438, 238,568,341,584, 154,526,205,632, 598,745,732,639, 647,278,021,173, 163,831,071,764, 896,225,159,592, 365,198,842,461, 226,688,733,330, 753,486,243,770, 471,723,522,422, 795,262,754,816 different possible settings.</p>
-
-<p>100 million million million million million million million million million million million million million million million million million million million million million million million million million million million million. POSSIBLE. SETTING.</p>
-
-<p>In scientific notation thats written as 1.04 x 10<sup>shit-ton</sup>.</p>
-
-<p>And to compare the two, the Lorenz could be set to: 660,349, 198,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000 TIMES more combinations than the Enigma.</p>
-
-<p>660,349 million million million million million million million million million million million million million million million million million million million million million million million million.  TIMES. MORE.</p>
-
-<p> Yeeeeesh.</p>
-
-<p>So why haven’t we heard of Colossus?  Well, it was highly classified through the late 1970’s, long after ENIAC had been revealed to the public in 1946 and hailed as the first electronic ‘Giant Brain’.  It’s hard to unseat a 30 year-old reputation.  Furthermore, Churchill ordered all but two of the 11 machines destroyed shortly after V-E Day in 1945.  The remaining machines were used for training and research purposes before being scrapped a number of years later.</p>
-
-<p>As far as I can tell the only reason one might prefer ENIAC over Colossus is that it was the first example of a Turing complete machine, whatever that mean.  You’ll have to look that one up for yourself; it went a bit over my head.  Then again Professor Benjamin Wells of the Departments of Computer Science and Mathematics, University of San Francisco, has shown that a Universal Turing Machine could run on ten Colossus computers and argues that this means that Colossus satisfies the definition of Turing completeness. Soon, there’s that?</p>
-
-<p>Sources-
-This isn’t a scholarly work so I’m not going to go back and cite anything, but here are a few places that were helpful:</p>
-
-<p><a href="http://billtuttememorial.org.uk/codebreaking/the-lorenz/">http://billtuttememorial.org.uk/codebreaking/the-lorenz/</a>
-<a href="https://www.youtube.com/watch?v=9HH-asvLAj4">https://www.youtube.com/watch?v=9HH-asvLAj4</a>
-<a href="http://www.wired.com/2007/09/dead-media-be-1-17/">http://www.wired.com/2007/09/dead-media-be-1-17/</a>
-<a href="http://history-computer.com/ModernComputer/Electronic/Colossus.html">http://history-computer.com/ModernComputer/Electronic/Colossus.html</a>
-<a href="http://cryptomuseum.com/crypto/colossus/index.htm">http://cryptomuseum.com/crypto/colossus/index.htm</a></p>
-</div>
-  
   
 
+<span class="byline author vcard">Posted by <span class="fn">Mason Jennings</span></span>
 
-    </article>
-  
-  
-    <article>
       
-  <header>
+
+
+
+
+<time class='entry-date' datetime='2015-06-27T21:27:11-04:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:27 pm</span></time>
+      
+
+
+    </p>
     
-      <h1 class="entry-title"><a href="/blog/2015/06/04/my-first-post-on-octopress/">When Constants Are NOT Constant</a></h1>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://mminute.github.io/blog/2015/06/27/how-to-build-a-valueless-gem/" data-via="" data-counturl="http://mminute.github.io/blog/2015/06/27/how-to-build-a-valueless-gem/" >Tweet</a>
+  
+  
+  
+</div>
+
     
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-06-04T21:34:41-04:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:34 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The speed of light.</p>
-
-<p>Avogadro&rsquo;s number.</p>
-
-<p>Planck&rsquo;s constant.</p>
-
-<p>The mass of an electron.</p>
-
-<p>I thought that I understood constants.  Unchanging. Immutable.  Then Ruby went and fucked it up.</p>
-
-<p>My understanding of constants in Ruby was that they are represented by a capitalized bareword (often all upper case) which, once defined, would cause Ruby to pitch a fit if you were to try to reassign its value.  Makes sense, right?  So when I saw this I was a bit confused:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Shoe
-</span><span class='line'>  BRANDS = []
-</span><span class='line'>
-</span><span class='line'>  def initialize(brand)
-</span><span class='line'>    @brand = brand
-</span><span class='line'>    if BRANDS.include?(@brand) == false
-</span><span class='line'>    BRANDS &lt;&lt; @brand
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Wait.. whaaaaaa????</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>BRANDS &lt;&lt; @brand</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Aren&rsquo;t we changing what BRAND represents?
-Yes and no.
-We are NOT changing the object to which the bareword &ldquo;BRANDS&rdquo; points.
-We ARE changing the contents of that array, or what I formerly thought of as the value for &ldquo;BRANDS&rdquo;.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>BRANDS = []
-</span><span class='line'>BRANDS.object_id #=&gt; 70132206506080
-</span><span class='line'>BRANDS &lt;&lt; "LA Gear"
-</span><span class='line'>BRANDS &lt;&lt; "FILA"
-</span><span class='line'>BRANDS #=&gt; ["LA Gear", "FILA"]
-</span><span class='line'>BRANDS.object_id #=&gt; 70132206506080</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But, wait!  There&rsquo;s more!</p>
-
-<p>So, while the value of PI might be the same in your home as it is in Intercourse, Pennsylvania,  Fucking, Austria,  and Wetwang, Yorkshire UK (all real places, btw), a constant may not be the same everywhere in your code.  Let&rsquo;s try this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["mmmmmm","piiiiiiiieeeeeee"]
-</span><span class='line'>
-</span><span class='line'>class TastyStuff
-</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
-</span><span class='line'>
-</span><span class='line'>  def initialize(name)
-</span><span class='line'>    if PIE.include?(name)
-</span><span class='line'>      puts "Nom!"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
-</span><span class='line'>
-</span><span class='line'>PIE #=&gt; ["mmmmmm","piiiiiiiieeeeeee"]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So now we have two &ldquo;PIE"s?
-Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["mmmmmm","piiiiiiiieeeeeee"]
-</span><span class='line'>
-</span><span class='line'>class TastyStuff
-</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
-</span><span class='line'>
-</span><span class='line'>  def initialize(name)
-</span><span class='line'>    if PIE.include?(name)
-</span><span class='line'>      puts "Nom!"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
-</span><span class='line'>
-</span><span class='line'>PIE #=&gt; ["mmmmmm","piiiiiiiieeeeeee"]
-</span><span class='line'>TastyStuff::PIE #=&gt; ["Pecan", "Apple", "Pumpkin"]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>What happens if we get rid of the &ldquo;PIE&rdquo; inside the class?</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["Pecan", "Apple", "Pumpkin"]
-</span><span class='line'>
-</span><span class='line'>class TastyStuff
-</span><span class='line'>  def initialize(name)
-</span><span class='line'>    if PIE.include?(name)
-</span><span class='line'>      puts "Nom!"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
-</span><span class='line'>
-</span><span class='line'>PIE #=&gt; ["Pecan", "Apple", "Pumpkin"]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But if we reverse it&hellip;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class TastyStuff
-</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
-</span><span class='line'>
-</span><span class='line'>  def initialize(name)
-</span><span class='line'>    if PIE.include?(name)
-</span><span class='line'>      puts "Nom!"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
-</span><span class='line'>
-</span><span class='line'>PIE #=&gt; uninitialized constant PIE (NameError)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Sooooooo&hellip; now we can&rsquo;t call &ldquo;PIE&rdquo; from outside of the class?   It only works from within the class?  I guess we could call it a &lsquo;Class Constant&rsquo;?  Yeah, let&rsquo;s call it a Class Constant because, well, that&rsquo;s what it&rsquo;s called.</p>
-
-<hr />
-
-<p>Let&rsquo;s summarize:</p>
-
-<ul>
-<li>Constants can only be set to point to an object once.</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
-</span><span class='line'>LYRICS = ["Hey Hey Hey, Goodbye"]
-</span><span class='line'>#=&gt;2: warning: already initialized constant LYRICS
-</span><span class='line'>#=&gt;1: warning: previous definition of LYRICS was here</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>The object to which a constant points CAN be changed.</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
-</span><span class='line'>LYRICS &lt;&lt; "Hey Hey Hey, Goodbye"
-</span><span class='line'>#=&gt; ["Nah Nah Nah Nah" , "Hey Hey Hey, Goodbye"]</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>Constants have a scope / are namespaced.</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
-</span><span class='line'>
-</span><span class='line'>class Tunes
-</span><span class='line'>  LYRICS = ["Hey Hey Hey, Goodbye"]
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>LYRICS #=&gt; ["Nah Nah Nah Nah"]
-</span><span class='line'>Tunes::LYRICS #=&gt; ["Hey Hey Hey, Goodbye"]</span></code></pre></td></tr></table></div></figure>
-
-
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/06/16/eniac-wasnt-first-dot-dot-dot/" title="Previous Post: ENIAC wasn't first?...">&laquo; ENIAC wasn't first?...</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -765,6 +430,7 @@ Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
 
   
 </aside>
+
 
     </div>
   </div>

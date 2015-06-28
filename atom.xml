@@ -4,7 +4,7 @@
   <title><![CDATA[A PlanarFe Adventure]]></title>
   <link href="http://mminute.github.io/atom.xml" rel="self"/>
   <link href="http://mminute.github.io/"/>
-  <updated>2015-06-17T13:17:05-04:00</updated>
+  <updated>2015-06-27T22:37:05-04:00</updated>
   <id>http://mminute.github.io/</id>
   <author>
     <name><![CDATA[Mason Jennings]]></name>
@@ -12,6 +12,292 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Build a Valueless Gem]]></title>
+    <link href="http://mminute.github.io/blog/2015/06/27/how-to-build-a-valueless-gem/"/>
+    <updated>2015-06-27T21:27:11-04:00</updated>
+    <id>http://mminute.github.io/blog/2015/06/27/how-to-build-a-valueless-gem</id>
+    <content type="html"><![CDATA[<p><img src="http://www.nysun.com/pics/6372.jpg" width="500" height="500" title="Tracy Hall" alt="H. Tracy Hall with his synthetic diamond machine."></p>
+
+<p>What are gems made out of?  Code.  (dammit Avi…)</p>
+
+<p>I realized the other day that, while I’ve been using gems for awhile now I didn’t actually know what goes into building an publishing one.  Let’s fix that.</p>
+
+<h3>What is a Gem?</h3>
+
+<p>A gem is the standard format for distributing Ruby programs and libraries, typically through the RubyGems package manager.</p>
+
+<h3>OK, so let’s make one.</h3>
+
+<p>Fine (pushy…).</p>
+
+<p>I started out writing out the steps to properly set up your file structure and build your gem.  It looked something like this:</p>
+
+<p><strong>I.Create a directory with the name of your gem.</strong></p>
+
+<p>It should look something like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root
+</span><span class='line'>├── bin
+</span><span class='line'>├── lib
+</span><span class='line'>└── test</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ruby Gem Naming convention as per RubyGems.org:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>GEM NAME                       REQUIRE STATEMENT                   MAIN CLASS OR MODULE
+</span><span class='line'>ruby_parser                    require 'ruby_parser'               RubyParser
+</span><span class='line'>rdoc-data                      require 'rdoc/data'                 RDoc::Data
+</span><span class='line'>net-http-persistent            require 'net/http/persistent'       Net::HTTP::Persistent
+</span><span class='line'>net-http-digest_auth           require 'net/http/digest_auth'      Net::HTTP::DigestAuth</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>II. WRITE YO CODE!</strong></p>
+
+<p>And put it in the ‘lib’ folder.  The convention is to have one Ruby file with the name of your gem, since that will be what is loaded when someone requires your gem.  This file is in charge of setting up your gem’s code and application program interface.</p>
+
+<p><em>Require additional files:</em></p>
+
+<ul>
+<li>These should go into a subfolder within lib named for the gem and required in your main gem file.  These dependencies will also be listed in your gem spec.  We’ll get to that in a bit.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>└── lib
+</span><span class='line'>├── poezix
+</span><span class='line'>│  └── more_poezix.rb
+</span><span class='line'>└── poezix.rb</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>III. Build the gemspec.</strong></p>
+
+<p>The gem spec contains all the information about your gem.  Who made it, what it’s for, its version, homepage, yada yada yada.  It’s al in the gemspec.  You can even make a gem without filling out the  required attributes of your gem in a gem spec file.  So it’s kinda important.</p>
+
+<p><strong>IV. Build the gem:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem build poezix.gemspec</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>V. Install the gem locally.</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install ./poezix-0.0.1.gem</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>VI. Test yo ish!</strong></p>
+
+<p>You don’t want to send out non-functional code with all your contact info in it.  Include a test suite and documentation.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>.
+</span><span class='line'>├── Rakefile
+</span><span class='line'>├── poezix.gemspec
+</span><span class='line'>├── bin
+</span><span class='line'>│   └── poezix
+</span><span class='line'>├── lib
+</span><span class='line'>│   ├── poezix
+</span><span class='line'>│   │   └── more_poezix.rb
+</span><span class='line'>│   └── poezix.rb
+</span><span class='line'>└── test
+</span><span class='line'>    └── test_poezix.rb</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% irb
+</span><span class='line'>>> require 'poezix'
+</span><span class='line'>#=> true
+</span><span class='line'>“twice”.upon_a_midnight_dreary{puts ‘Nevermore!’}
+</span><span class='line'>#=> Nevermore!
+</span><span class='line'>#=> Nevermore!</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>VII. Document your code with RDoc, Yard, or something similar.</strong></p>
+
+<p><strong>VIII. Publish!</strong></p>
+
+<p>Create an account at ruby gems.org.</p>
+
+<p>Setup your account on your computer</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>curl -u qrush https://rubygems.org/api/v1/api_key.yaml>~/.gem/credentials; chmod 0600 ~/.gem/credentials</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Push your gem to the interwebs.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem push poezix-0.0.1.gem</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Now Ignore All of That and Do This Instead:</h3>
+
+<p>Why?  because it’s faster, easier, and idiot-proof.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle gem your_gem_name</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Oh, look!  It made just about everything you need and it even included hints of what to put where in the files that Bundler created for you.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>poezix
+</span><span class='line'>├── .gitignore
+</span><span class='line'>├── Gemfile
+</span><span class='line'>├── LICENSE.txt
+</span><span class='line'>├── README.md
+</span><span class='line'>├── Rakefile
+</span><span class='line'>├── poezix.gemspec
+</span><span class='line'>└── lib
+</span><span class='line'>    ├── poezix
+</span><span class='line'>    │   └── version.rb
+</span><span class='line'>    └── poezix.rb</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hey!  Look!  A TODO list!</p>
+
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="lineno"> 1</span> <span class="c1"># coding: utf-8</span>
+<span class="lineno"> 2</span> <span class="n">lib</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;../lib&#39;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span>
+<span class="lineno"> 3</span> <span class="vg">$LOAD_PATH</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span> <span class="k">unless</span> <span class="vg">$LOAD_PATH</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span>
+<span class="lineno"> 4</span> <span class="nb">require</span> <span class="s1">&#39;test_gem/version&#39;</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Specification</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">spec</span><span class="o">|</span>
+<span class="lineno"> 7</span>   <span class="n">spec</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="s2">&quot;test_gem&quot;</span>
+<span class="lineno"> 8</span>   <span class="n">spec</span><span class="o">.</span><span class="n">version</span>       <span class="o">=</span> <span class="no">TestGem</span><span class="o">::</span><span class="no">VERSION</span>
+<span class="lineno"> 9</span>   <span class="n">spec</span><span class="o">.</span><span class="n">authors</span>       <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;user_name&quot;</span><span class="o">]</span>
+<span class="lineno">10</span>   <span class="n">spec</span><span class="o">.</span><span class="n">email</span>         <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;user_email@some_mail.com&quot;</span><span class="o">]</span>
+<span class="lineno">11</span> 
+<span class="lineno">12</span>   <span class="n">spec</span><span class="o">.</span><span class="n">summary</span>       <span class="o">=</span> <span class="sx">%q{TODO: Write a short summary, because Rubygems requires one.}</span>
+<span class="lineno">13</span>   <span class="n">spec</span><span class="o">.</span><span class="n">description</span>   <span class="o">=</span> <span class="sx">%q{TODO: Write a longer description or delete this line.}</span>
+<span class="lineno">14</span>   <span class="n">spec</span><span class="o">.</span><span class="n">homepage</span>      <span class="o">=</span> <span class="s2">&quot;TODO: Put your gem&#39;s website or public repo URL here.&quot;</span>
+<span class="lineno">15</span>   <span class="n">spec</span><span class="o">.</span><span class="n">license</span>       <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
+<span class="lineno">16</span> 
+<span class="lineno">17</span>   <span class="c1"># Prevent pushing this gem to RubyGems.org by setting &#39;allowed_push_host&#39;, or</span>
+<span class="lineno">18</span>   <span class="c1"># delete this section to allow pushing this gem to any host.</span>
+<span class="lineno">19</span>   <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="ss">:metadata</span><span class="p">)</span>
+<span class="lineno">20</span>     <span class="n">spec</span><span class="o">.</span><span class="n">metadata</span><span class="o">[</span><span class="s1">&#39;allowed_push_host&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;TODO: Set to &#39;http://mygemserver.com&#39;&quot;</span>
+<span class="lineno">21</span>   <span class="k">else</span>
+<span class="lineno">22</span>     <span class="k">raise</span> <span class="s2">&quot;RubyGems 2.0 or newer is required to protect against public gem pushes.&quot;</span>
+<span class="lineno">23</span>   <span class="k">end</span>
+<span class="lineno">24</span> 
+<span class="lineno">25</span>   <span class="n">spec</span><span class="o">.</span><span class="n">files</span>         <span class="o">=</span> <span class="sb">`git ls-files -z`</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x0</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">%r{^(test|spec|features)/}</span><span class="p">)</span> <span class="p">}</span>
+<span class="lineno">26</span>   <span class="n">spec</span><span class="o">.</span><span class="n">bindir</span>        <span class="o">=</span> <span class="s2">&quot;exe&quot;</span>
+<span class="lineno">27</span>   <span class="n">spec</span><span class="o">.</span><span class="n">executables</span>   <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">grep</span><span class="p">(</span><span class="sr">%r{^exe/}</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">}</span>
+<span class="lineno">28</span>   <span class="n">spec</span><span class="o">.</span><span class="n">require_paths</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;lib&quot;</span><span class="o">]</span>
+<span class="lineno">29</span> 
+<span class="lineno">30</span>   <span class="n">spec</span><span class="o">.</span><span class="n">add_development_dependency</span> <span class="s2">&quot;bundler&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 1.10&quot;</span>
+<span class="lineno">31</span>   <span class="n">spec</span><span class="o">.</span><span class="n">add_development_dependency</span> <span class="s2">&quot;rake&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 10.0&quot;</span>
+<span class="lineno">32</span>   <span class="n">spec</span><span class="o">.</span><span class="n">add_development_dependency</span> <span class="s2">&quot;rspec&quot;</span>
+<span class="lineno">33</span> <span class="k">end</span></code></pre></div>
+
+
+<p>Now write your ruby, fill out your gem spec and readme, build your gem, write some tests, test your gem, and publish your fancy, new red rock.</p>
+
+<p>Here’s the not all that useful gem that I built for the purposes of this gemsperiment:</p>
+
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="lineno"> 1</span> <span class="nb">require</span> <span class="s2">&quot;poezix/version&quot;</span>
+<span class="lineno"> 2</span> 
+<span class="lineno"> 3</span> <span class="k">class</span> <span class="nc">String</span>
+<span class="lineno"> 4</span>     <span class="k">def</span> <span class="nf">upon_a_midnight_dreary</span>
+<span class="lineno"> 5</span>       <span class="k">if</span> <span class="nb">self</span> <span class="o">==</span> <span class="s2">&quot;once&quot;</span>
+<span class="lineno"> 6</span>         <span class="mi">1</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+<span class="lineno"> 7</span>           <span class="k">yield</span>
+<span class="lineno"> 8</span>         <span class="k">end</span>        
+<span class="lineno"> 9</span>       <span class="k">elsif</span> <span class="nb">self</span> <span class="o">==</span> <span class="s2">&quot;twice&quot;</span>
+<span class="lineno">10</span>         <span class="mi">2</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+<span class="lineno">11</span>           <span class="k">yield</span>
+<span class="lineno">12</span>         <span class="k">end</span>
+<span class="lineno">13</span>       <span class="k">elsif</span> <span class="nb">self</span> <span class="o">==</span> <span class="s2">&quot;thrice&quot;</span>
+<span class="lineno">14</span>         <span class="mi">3</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+<span class="lineno">15</span>           <span class="k">yield</span>
+<span class="lineno">16</span>         <span class="k">end</span>
+<span class="lineno">17</span>       <span class="k">else</span>
+<span class="lineno">18</span>         <span class="k">raise</span> <span class="s2">&quot;Mayhaps an Integer you seek?&quot;</span>
+<span class="lineno">19</span>       <span class="k">end</span>
+<span class="lineno">20</span>     <span class="k">end</span>
+<span class="lineno">21</span> <span class="k">end</span>
+<span class="lineno">22</span> 
+<span class="lineno">23</span> 
+<span class="lineno">24</span> <span class="k">class</span> <span class="nc">Integer</span>
+<span class="lineno">25</span>   <span class="k">def</span> <span class="nf">upon_a_midnight_dreary</span>
+<span class="lineno">26</span>     <span class="nb">self</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+<span class="lineno">27</span>       <span class="k">yield</span>
+<span class="lineno">28</span>     <span class="k">end</span>
+<span class="lineno">29</span>   <span class="k">end</span>
+<span class="lineno">30</span> <span class="k">end</span>
+<span class="lineno">31</span> 
+<span class="lineno">32</span> 
+<span class="lineno">33</span> 
+<span class="lineno">34</span> <span class="k">def</span> <span class="nf">quoth</span><span class="p">(</span><span class="n">phrase</span> <span class="o">=</span> <span class="s2">&quot;Nevermore&quot;</span><span class="p">)</span>
+<span class="lineno">35</span>   <span class="nb">puts</span> <span class="n">phrase</span><span class="o">.</span><span class="n">upcase</span> <span class="o">+</span> <span class="s2">&quot;!!!&quot;</span>
+<span class="lineno">36</span> <span class="k">end</span>
+<span class="lineno">37</span> 
+<span class="lineno">38</span> 
+<span class="lineno">39</span> <span class="c1">#Generates filler content from a text randomly selected from one of 42 poems/short stories.</span>
+<span class="lineno">40</span> <span class="c1">#Takes an arguement to determine the number of line returned.</span>
+<span class="lineno">41</span> 
+<span class="lineno">42</span> <span class="k">def</span> <span class="nf">poesem_ipsum</span><span class="p">(</span><span class="n">number_of_lines</span> <span class="o">=</span> <span class="s2">&quot;full&quot;</span><span class="p">)</span>
+<span class="lineno">43</span>   <span class="n">all_texts</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/texts/*.txt&quot;</span><span class="o">]</span>
+<span class="lineno">44</span>   <span class="n">number_of_texts</span> <span class="o">=</span> <span class="n">all_texts</span><span class="o">.</span><span class="n">size</span>
+<span class="lineno">45</span>   <span class="n">selection</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.number_of_texts</span><span class="p">)</span>
+<span class="lineno">46</span> 
+<span class="lineno">47</span>   <span class="n">text</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">all_texts</span><span class="o">[</span><span class="n">selection</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span> <span class="c1">#An Array</span>
+<span class="lineno">48</span> 
+<span class="lineno">49</span>   <span class="k">if</span> <span class="n">number_of_lines</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span>
+<span class="lineno">50</span>     <span class="n">number_of_lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="lineno">51</span>   <span class="k">end</span>
+<span class="lineno">52</span> 
+<span class="lineno">53</span>   <span class="n">text</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.number_of_lines</span><span class="o">].</span><span class="n">join</span>
+<span class="lineno">54</span> <span class="k">end</span></code></pre></div>
+
+
+<p>Sources:</p>
+
+<p>[Engineering Lunch Series] Step-by-Step Guide to Building Your First Ruby Gem
+<a href="https://quickleft.com/blog/engineering-lunch-series-step-by-step-guide-to-building-your-first-ruby-gem/">https://quickleft.com/blog/engineering-lunch-series-step-by-step-guide-to-building-your-first-ruby-gem/</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ENIAC Wasn't First?...]]></title>
