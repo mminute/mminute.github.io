@@ -9,7 +9,7 @@
   <meta name="author" content="Mason Jennings">
 
   
-  <meta name="description" content="What are gems made out of? Code. (dammit Avi…) I realized the other day that, while I’ve been using gems for awhile now I didn’t actually know what &hellip;">
+  <meta name="description" content="I ran across a blog post explaining how you can use regular expressions to determine if a number is prime. It seems like an odd use and it has been a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,180 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/08/primes-with-regex/">Primes With Regex</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-08T09:04:52-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:04 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I ran across a blog post explaining how you can use regular expressions to determine if a number is prime.  It seems like an odd use and it has been a while (kinda? Like four whole weeks!) since I’ve used regular expressions so it took a a bit of time and a whole lot of whiteboard space to figure out what was happening so this is the post topic that you’re getting god dammit!</p>
+
+<p>So how about I show you what it looks like before we step through it:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def primes_with_regex?(num)
+</span><span class='line'>  num_as_1s = "1" * num
+</span><span class='line'>  ! /^1?$|^(11+?)\1+$/.match(num_as_1s)
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or, more succinctly:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def primes_with_regex?(num)
+</span><span class='line'>   ("1" * num) !~ /^1?$|^(11+?)\1+$/
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here’s how it works, broken down piece by piece:</p>
+
+<ul>
+<li><p>Create a string composed of “1” (or really any character) of length ‘num’.</p></li>
+<li><p>‘!’ negates the matching condition.  If we find a match for either of our two regular expressions then the number passed to our method is not a prime and the method returns false.</p>
+
+<p><strong>&ndash;>!&lt;&ndash;</strong> /^1?$|^(11+?)\1+$/.match(num_as_1s)</p></li>
+<li><p>Check to see if the number passed to the method is zero or one.  These numbers are not prime so our method should return false.</p>
+
+<p>! /<strong>&ndash;>^1?$&lt;&ndash;</strong>|^(11+?)\1+$/.match(num_as_1s)</p>
+
+<ul>
+<li>‘<strong>^</strong>’ anchors the expression to the beginning of the string</li>
+<li>‘<strong>1?</strong>’ uses the ‘lazy’ quantifier to match zero or one occurrences of ‘1’.</li>
+<li>‘<strong>$</strong>’ checks that the zero or one occurrences of ‘1’ are also anchored to the end of the string.</li>
+<li>If ‘1’ occurs either zero or one times and is anchored to both the beginning and the end of the string the regular expression will match and, though our negation, our method will return false thereby correctly stating that the numbers 1 and 0 are not prime.</li>
+</ul>
+</li>
+<li><p>Checks to see if the string of ‘1’s can be evenly divided into groups of some length n.</p>
+
+<p>  ! /^1?$|<strong>&ndash;>^(11+?)\1+$&lt;&ndash;</strong>/.match(num_as_1s)</p>
+
+<ul>
+<li><p>The regular expression will match (and, through negation, our method will return false) if the string can be every divided into groups.  If the string can be evenly divided into segments of length n then the repetition of the groups will naturally abut the beginning and the end of the string, thereby satisfying the beginning and end anchor conditions.</p>
+
+<p>! /^1?$|^<strong>&ndash;>(11+?)&lt;&ndash;</strong>\1+$/.match(num_as_1s)</p></li>
+<li><p>Creates a matching group of two or more ‘1’s lazily.  I think of the ‘?’ as being generous more than lazy.  If a subsequent portion of the regular expression could use some of the characters that it has grabbed to match and the loss of those characters will not cause the first portion to no longer match, then it will generously give those characters away to make the entirety of the expression return true.  All for one and one for all!!!  This matching group is then stored as something like “Matching Group 1” as shown below.</p>
+
+<p>! /^1?$|^(11+?)<strong>&ndash;>\1&lt;&ndash;</strong>+$/.match(num_as_1s)</p></li>
+</ul>
+
+
+<p>Here is an example of a capturing group that may make the concept more clear:</p>
+
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(\d\d) + (\d\d) = \2 + \1 matches &ldquo;12 + 65 = 65 + 12&rdquo;</span></code></pre></td></tr></table></div></figure></p>
+
+<ul>
+<li><p>Mushes together one or more occurrences of the matching group in an effort to create a collection of them that abut the beginning and end of the string.</p>
+
+<p>! /^1?$|^(11+?)\1<strong>&ndash;>+&lt;&ndash;</strong>$/.match(num_as_1s)</p></li>
+</ul>
+</li>
+</ul>
+
+
+<p>So what does it actually do?</p>
+
+<p><img src="images/Primes_w_regex.jpg"></p>
+
+<p>That’s cute, but should I use it?
+No!  Why would you determine primes using a string like some kind of asshole?  Computers are good with numbers.  Just let ‘em do their thing.  That’s not just my opinion.  Shakira said that hip’s don’t lie.  Neither does benchmark.  Let’s see what it says:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Benchmark.bmbm do |x|
+</span><span class='line'>  x.report("Prime_w_Regex") { for i in 0..999 do
+</span><span class='line'>                                prime_with_regex?(i)
+</span><span class='line'>                              end}
+</span><span class='line'>
+</span><span class='line'>  x.report("Prime_by_Math")  { for i in 0..999 do
+</span><span class='line'>                                is_prime?(i)
+</span><span class='line'>                               end}
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  x.report("Prime_by_Prime_Mod")  { for i in 0..999 do
+</span><span class='line'>                                      Prime.prime?(i)
+</span><span class='line'>                                    end}
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>Rehearsal ------------------------------------------------------
+</span><span class='line'>Prime_w_Regex        0.170000   0.000000   0.170000 (  0.172319)
+</span><span class='line'>Prime_by_Math        0.000000   0.000000   0.000000 (  0.003190)
+</span><span class='line'>Prime_by_Prime_Mod   0.000000   0.000000   0.000000 (  0.002690)
+</span><span class='line'>--------------------------------------------- total: 0.170000sec
+</span><span class='line'>
+</span><span class='line'>                         user     system      total        real
+</span><span class='line'>Prime_w_Regex        0.170000   0.000000   0.170000 (  0.172192)
+</span><span class='line'>Prime_by_Math        0.000000   0.000000   0.000000 (  0.002153)
+</span><span class='line'>Prime_by_Prime_Mod   0.010000   0.000000   0.010000 (  0.002359)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So that only took, like 72 times as long.  Sooooooo, novelty much?</p>
+
+<h3>Sources:</h3>
+
+<p>  <strong>The Blog:</strong></p>
+
+<p>  <a href="http://www.noulakaz.net/2007/03/18/a-regular-expression-to-check-for-prime-numbers/">http://www.noulakaz.net/2007/03/18/a-regular-expression-to-check-for-prime-numbers/</a></p>
+
+<p>  <strong>Regex Cheatsheet (More Quantifiers):</strong></p>
+
+<p>  <a href="http://www.rexegg.com/regex-quickstart.html">http://www.rexegg.com/regex-quickstart.html</a></p>
+
+<p>  <strong>Pickaxe- Regular Expressions- p.100</strong></p>
+
+<p>  Thomas, Dave. Programming Ruby 1.9 &amp; 2.0: The Pragmatic Programmers' Guide. 2013</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -743,6 +917,10 @@ Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/07/08/primes-with-regex/">Primes With Regex</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/06/27/how-to-build-a-valueless-gem/">How to Build a Valueless Gem</a>
