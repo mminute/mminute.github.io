@@ -4,7 +4,7 @@
   <title><![CDATA[A PlanarFe Adventure]]></title>
   <link href="http://mminute.github.io/atom.xml" rel="self"/>
   <link href="http://mminute.github.io/"/>
-  <updated>2015-07-08T10:42:40-04:00</updated>
+  <updated>2015-07-08T10:46:24-04:00</updated>
   <id>http://mminute.github.io/</id>
   <author>
     <name><![CDATA[Mason Jennings]]></name>
@@ -18,9 +18,7 @@
     <link href="http://mminute.github.io/blog/2015/07/08/primes-with-regex/"/>
     <updated>2015-07-08T09:04:52-04:00</updated>
     <id>http://mminute.github.io/blog/2015/07/08/primes-with-regex</id>
-    <content type="html"><![CDATA[<p>testing</p>
-
-<p>I ran across a blog post explaining how you can use regular expressions to determine if a number is prime.  It seems like an odd use and it has been a while (kinda? Like four whole weeks!) since I’ve used regular expressions so it took a a bit of time and a whole lot of whiteboard space to figure out what was happening so this is the post topic that you’re getting god dammit!</p>
+    <content type="html"><![CDATA[<p>I ran across a blog post explaining how you can use regular expressions to determine if a number is prime.  It seems like an odd use and it has been a while (kinda? Like four whole weeks!) since I’ve used regular expressions so it took a a bit of time and a whole lot of whiteboard space to figure out what was happening so this is the post topic that you’re getting god dammit!</p>
 
 <p>So how about I show you what it looks like before we step through it:</p>
 
@@ -92,7 +90,7 @@
 
 <p>So what does it actually do?</p>
 
-<p><img src="http://mminute.github.io/images/Primes_w_regex.jpg" /></p>
+<p><img src="http://mminute.github.io/images/Primes_w_regex.png" /></p>
 
 <p>That’s cute, but should I use it?
 No!  Why would you determine primes using a string like some kind of asshole?  Computers are good with numbers.  Just let ‘em do their thing.  That’s not just my opinion.  Shakira said that hip’s don’t lie.  Neither does benchmark.  Let’s see what it says:</p>
