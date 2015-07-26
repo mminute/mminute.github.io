@@ -9,7 +9,7 @@
   <meta name="author" content="Mason Jennings">
 
   
-  <meta name="description" content="I ran across a blog post explaining how you can use regular expressions to determine if a number is prime. It seems like an odd use and it has been a &hellip;">
+  <meta name="description" content="Three.js is a Javascript library designed to be used to render 3D objects and animations in the browser using WebGL. It allows you to create &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,236 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/25/3dify-yourself-three-dot-js/">3Dify Yourself: Three.js</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-25T18:23:44-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:23 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/french-bulldog-with-3d-glasses-retales-botijero.png" /></p>
+
+<p><a href="http://threejs.org/"><strong>Three.js</strong></a> is a Javascript library designed to be used to render 3D objects and animations in the browser using <a href="https://www.khronos.org/webgl/">WebGL.</a>  It allows you to create animations without relying on proprietary plugins using the end-users GPU and as well as providing a bunch of classes and functions to let you skip a whole bunch of programming and move straight to the animating.</p>
+
+<p>It breaks down into four basic components:</p>
+
+<ul>
+<li><a href="http://threejs.org/docs/index.html#Reference/Scenes/Scene"><strong>A Scene</strong></a>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="kd">var</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">();</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure></li>
+<li><a href="http://threejs.org/docs/index.html#Reference/Cameras/PerspectiveCamera"><strong>A Camera</strong></a>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="kd">var</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span> <span class="mi">75</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="o">/</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1000</span> <span class="p">);</span>
+</span><span class='line'>    <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure></li>
+<li><a href="http://threejs.org/docs/index.html#Reference/Renderers/WebGLRenderer"><strong>A Renderer</strong></a>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="kd">var</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">();</span>
+</span><span class='line'>    <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span> <span class="p">);</span>
+</span><span class='line'>    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span> <span class="p">);</span>
+</span><span class='line'>    <span class="nx">renderer</span><span class="p">.</span><span class="nx">setClearColor</span><span class="p">(</span> <span class="mh">0xffffff</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure></li>
+<li><a href="http://threejs.org/docs/index.html#Reference/Core/Geometry
+"><strong>One or more geometric objects</strong></a>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>      <span class="kd">var</span> <span class="nx">geometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span> <span class="p">);</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">material</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">(</span> <span class="p">{</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">cube</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span> <span class="nx">geometry</span><span class="p">,</span> <span class="nx">material</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span> <span class="nx">cube</span> <span class="p">);</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure></li>
+<li><strong>A Render function</strong>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>      <span class="kd">var</span> <span class="nx">render</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span><span class="nx">requestAnimationFrame</span><span class="p">(</span> <span class="nx">render</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span><span class="nx">$direction</span> <span class="o">===</span> <span class="mi">1</span><span class="p">){</span>
+</span><span class='line'>          <span class="k">if</span><span class="p">(</span><span class="nx">$counter</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">){</span><span class="nx">cube</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.03</span><span class="p">;</span> <span class="nx">$counter</span><span class="o">++</span><span class="p">}</span>
+</span><span class='line'>          <span class="k">else</span><span class="p">{</span><span class="nx">$direction</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">if</span><span class="p">(</span><span class="nx">$counter</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">){</span><span class="nx">cube</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="mf">0.03</span><span class="p">;</span> <span class="nx">$counter</span><span class="o">++</span><span class="p">}</span>
+</span><span class='line'>          <span class="k">else</span><span class="p">{</span><span class="nx">$direction</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
+</span><span class='line'>        <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure></li>
+</ul>
+
+
+<p>The scene, camera, and geometry are pretty self explanatory (though you try putting together some advanced geometries if you think it&rsquo;s so easy!).  The renderer does all the heavy lifting to display your magnificent creation, but the fun happens in the render function.  This is where your talent and skill come into play on the game grid you master of space and motion, you.  Within the render function is where you can do things like move, rotate, and deform objects.  <a href="http://threejs.org/docs/#Reference/Core/Object3D">Go on, get crazy with your bad self!</a>  The documentation is a bit cumbersome to traverse but given more time an effort than I feel like putting into this right now you can create some pretty impressive stuff.  Like this:</p>
+
+<p><a href="http://hexgl.bkcore.com/"><img src="/images/gameDemoScreenShot.png" /></a></p>
+
+<p>Here&rsquo;s the quick animation that I played with.  It&rsquo;s basically the code from the Three.js &lsquo;Getting Started&rsquo; but I tweaked a couple different things until I got tired and settled on a bouncing cube.</p>
+
+<p>  <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="o">&lt;</span><span class="nx">html</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="nx">head</span><span class="o">&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">title</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">first</span> <span class="nx">Three</span><span class="p">.</span><span class="nx">js</span> <span class="nx">app</span><span class="o">&lt;</span><span class="err">/title&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">style</span><span class="o">&gt;</span>
+</span><span class='line'>          <span class="nx">body</span> <span class="p">{</span> <span class="nx">margin</span><span class="o">:</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>          <span class="nx">canvas</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">100</span><span class="o">%</span><span class="p">;</span> <span class="nx">height</span><span class="o">:</span> <span class="mi">100</span><span class="o">%</span> <span class="p">}</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="err">/style&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="err">/head&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="nx">body</span><span class="o">&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;js/three.min.js&quot;</span><span class="o">&gt;&lt;</span><span class="err">/script&gt;</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">();</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span> <span class="mi">75</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="o">/</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1000</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">();</span>
+</span><span class='line'>          <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span> <span class="p">);</span>
+</span><span class='line'>          <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span> <span class="p">);</span>
+</span><span class='line'>          <span class="nx">renderer</span><span class="p">.</span><span class="nx">setClearColor</span><span class="p">(</span> <span class="mh">0xffffff</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">geometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span> <span class="p">);</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">material</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">(</span> <span class="p">{</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">cube</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span> <span class="nx">geometry</span><span class="p">,</span> <span class="nx">material</span> <span class="p">);</span>
+</span><span class='line'>          <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span> <span class="nx">cube</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">$direction</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">render</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">requestAnimationFrame</span><span class="p">(</span> <span class="nx">render</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span><span class="p">(</span><span class="nx">$direction</span> <span class="o">===</span> <span class="mi">1</span><span class="p">){</span>
+</span><span class='line'>              <span class="k">if</span><span class="p">(</span><span class="nx">$counter</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">){</span><span class="nx">cube</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.03</span><span class="p">;</span> <span class="nx">$counter</span><span class="o">++</span><span class="p">}</span>
+</span><span class='line'>              <span class="k">else</span><span class="p">{</span><span class="nx">$direction</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>              <span class="k">if</span><span class="p">(</span><span class="nx">$counter</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">){</span><span class="nx">cube</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="mf">0.03</span><span class="p">;</span> <span class="nx">$counter</span><span class="o">++</span><span class="p">}</span>
+</span><span class='line'>              <span class="k">else</span><span class="p">{</span><span class="nx">$direction</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
+</span><span class='line'>            <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="nx">render</span><span class="p">();</span>
+</span><span class='line'>        <span class="o">&lt;</span><span class="err">/script&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="err">/body&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="err">/html&gt;</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>  The animation may be simple but that isn&rsquo;t much code for a rendered scene.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -917,6 +1147,10 @@ Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/07/25/3dify-yourself-three-dot-js/">3Dify Yourself: Three.js</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/07/08/primes-with-regex/">Primes With Regex</a>
