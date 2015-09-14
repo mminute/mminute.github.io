@@ -4,7 +4,7 @@
   <title><![CDATA[A PlanarFe Adventure]]></title>
   <link href="http://mminute.github.io/atom.xml" rel="self"/>
   <link href="http://mminute.github.io/"/>
-  <updated>2015-08-24T22:09:47-04:00</updated>
+  <updated>2015-09-14T16:03:17-04:00</updated>
   <id>http://mminute.github.io/</id>
   <author>
     <name><![CDATA[Mason Jennings]]></name>
@@ -12,6 +12,62 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[If You Want to Ace the Interview, You've Got to Break a Few Eggs: The Two Egg Problem]]></title>
+    <link href="http://mminute.github.io/blog/2015/09/13/two-egg-problem/"/>
+    <updated>2015-09-13T15:56:08-04:00</updated>
+    <id>http://mminute.github.io/blog/2015/09/13/two-egg-problem</id>
+    <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/lucky_egg.gif" alt="Cool Runnings Lucky Egg"></p>
+
+<p>Someone from the previous Flatiron class (class 04-15, wish I could remember his name) sat with me and <a href="https://twitter.com/sarahsalder">Sarah</a> for a while, like, a long while sometime in the middle of August to walk us through a couple of questions that he or his classmates had been asked during technical interviews.  One was the <a href="https://en.wikipedia.org/wiki/Birthday_problem">&ldquo;Birthday Paradox&rdquo;</a> and the other was the <b><em>&ldquo;Two Egg Problem&rdquo;</em></b>.</p>
+
+<h4>The Setup:</h4>
+
+<p>It goes something like this:
+There is a 100 story building.  You have two identical eggs.  An egg, when dropped from a floor will either break or not break.  If the egg breaks when dropped from some floor &lsquo;n&rsquo; then it would have broken from every floor above that floor. If the egg does not breaks when dropped from some floor &lsquo;n&rsquo; then it would have survived the fall from every floor below the floor &lsquo;n&rsquo;.  If the egg is unbroken it can be picked up and dropped again.  What strategy should you adopt to minimize the number of egg drops it takes to find the highest floor from which an egg can be dropped without breaking.</p>
+
+<h4>The REAL Question:</h4>
+
+<p>The solution that interviewer is looking for optimizes for the worst case scenario, or, as phrased in the DataGenetics article linked below, &ldquo;Minimization of Maximum Regret&rdquo;.  So what does that mean?  Your solution should ensure that, in the absolute worst case scenario, finding the floor from which a dropped egg will break takes as few drops as possible.  Or, stated a bit differently, the most number of drops required to identify the floor from which the egg will break is as small as possible.</p>
+
+<h4>The Buildup:</h4>
+
+<p><em>First let&rsquo;s examine the &ldquo;One Egg Problem&rdquo;.</em></p>
+
+<p>Ok, so worst case scenario is that the egg breaks only when dropped from the 100th floor.  How do we find this out?  Well, since we only have one egg to work with we have to start at the first floor (the floor above the ground floor. Let&rsquo;s do this <a href="https://en.wikipedia.org/wiki/Storey#Lift.2FElevator_buttons">European Style,</a> ok?) and work our way up one floor at a time.  If we skipped up a floor, say instead of starting on the first floor, we start on the second, and the egg breaks we can&rsquo;t know if it would have also broken when dropped from the first floor because we are out of eggs.  So, worst case scenario we have to drop that damn egg 100 times and either we get to know the inside of the elevator reeeeeeeeal well or we&rsquo;re exhausted from a 100 storey climb.</p>
+
+<p><em>Now let&rsquo;s examine the &ldquo;Many Egg Problem&rdquo;.</em></p>
+
+<p>So now we have infinite eggs.  Omelettes forever!!!!!!!  The problem is now a binary search, broken or unbroken after a drop.  We halve the search range after each test.  We drop an egg from floor 50 and it survives.  We now only have 50 floors to search through.  We test in the middle of the remaining floors (75) and the egg survives again.  Two drops and we&rsquo;ve narrowed the range down to 25.  We halve the range again- floor 87- and the super egg still doesn&rsquo;t break.  Three drops.  Half again, 93rd floor, egg survives. Four. And again, 96th, egg survives. Five. Again, 98, survives. Six. Again, 99, survives. Seven and we know the floor that causes the break is the 100th.</p>
+
+<p><img src="http://mminute.github.io/images/many_egg_solution.jpg" alt="Cool Runnings Lucky Egg"></p>
+
+<h4>The Solution:</h4>
+
+<p><em>Back to Two Eggs.  I miss my infinite eggs already.  Later little buddies:</em></p>
+
+<p>Ok, so we have two eggs.  Where do we start?  Let&rsquo;s just say we want to halve the search range so we drop an egg at floor 50.  It survives. So now we floor by floor.  Finally second egg drops on floor 100.  Our test took 51 drops.  That&rsquo;s a lot better than 100 like we had using only one egg but still a lot of drops.</p>
+
+<p>Let&rsquo;s try it again but this time let&rsquo;s start at floor ten and go up by ten floor each time.  Drop @10.  Egg survives.  @20, @30, @40, @50, @60, @70, @80, @90.  That tenacious egg survives them all.  We go up 10 floor again to floor 100 and the egg breaks!  You are not indestructible my ovoid friend!  Back down to floor 91 and step up one by one until&hellip; Hey, it survives every one!  So thats 19 drops by my count. A lot better.  But what if it had broken at floor 50 instead?  That would mean drops @10, @20, @30, @40, @50, @41..@49 if the egg were to break at the 49th floor.  Sooo, 14 drops.  There&rsquo;s a bit of a gap there in the number of drops it took to reach an answer when the highest safe drop floor was 99 versus 49, and in that gap is the heart of the problem.  We want to make that distribution in the number of drops required more uniform.</p>
+
+<p>The number of drops it takes to figure out the answer in the worst case scenario should always be the same.  That&rsquo;s the goal in making a uniform distribution.  So let&rsquo;s say that the egg drops at floor 9.  Going by tens it takes a drop at floor 10, then 1..9 for a total of 10 drops.  Now let&rsquo;s say that it breaks at floor 19.  Again going by ten it takes drops at 10, 20, 11..19 for a total of 11 drops.  If we want to create a uniform distribution in the number of drops to find the answer in the worst case scenario we have to account for the extra drop that it took to from the first case (breaks at 9) to the second case (breaks at 19).  If instead of jumping up 10 floors from 10 to 10 we instead jump up 9 floors from 10 to 19 (accounting for the extra multi-floor step) then the worst case scenario- the egg breaks at floor 18- takes drops at 10, 19, 11..18 for 10 drops again!  There, there is an even distribution!  So that&rsquo;s the trick of it.  Every time we make a multi-story leap up the building the distance that we go up should be reduced by one in order to account for the additional drop.</p>
+
+<p>Now that we have the concept of it we can go a little more abstract. If we call the first floor from which we drop an egg &lsquo;n&rsquo; then the next floor from which we drop an egg should be n-1 above the first drop point.  The one after that should be n-2 above the last and so on.  So it end up looking something like:</p>
+
+<p><strong>n + (n-1) + (n-2) + (n-3) + &hellip; + 1 >= (number of floors in the building)</strong></p>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/First_six_triangular_numbers.svg" alt="Triangular Number Image"></p>
+
+<p>This summation is identical to the formula for <a href="https://en.wikipedia.org/wiki/Triangular_number">Triangular Numbers</a> which simplifies to <strong>n(n+1)/2</strong>.  So, I guess it&rsquo;s assumed that you would know this.  Don&rsquo;t ask me why.  For 100 floors that&rsquo;s <strong>100 = n(n+1)/2</strong> which is equivalent to <strong>n<sup>2</sup> + n - 200</strong>.  If you solve that equation for n using the quadratic equation you get ~ 13.65. Let&rsquo;s round that up to 14 since we are working with whole floors.  So, after all that, our strategy is to drop the egg at floor 14 (n), 27 (n + n-1), 39, 50, 60, 69, 77, 84, 90, 95, and 100.  Every worst case scenario requires 14 drops and we are done!</p>
+
+<p><img src="http://mminute.github.io/images/two_egg_solution.jpg" alt="Cool Runnings Lucky Egg"></p>
+
+<p><a href="http://datagenetics.com/blog/july22012/index.html">
+  DataGenetics- The Two Egg Probem
+</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[]]></title>
