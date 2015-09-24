@@ -1,0 +1,1326 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Everyday Rails: Testing With RSpec - A PlanarFe Adventure</title>
+  <meta name="author" content="Mason Jennings">
+
+  
+  <meta name="description" content="What&rsquo;s a pirate&rsquo;s favorite testing framework?
+ArrrrrrrrSpec! This past week I&rsquo;ve been working through Aaron Sumner&rsquo;s &ldquo; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mminute.github.io/blog/2015/09/23/everyday-rails-testing-with-rspec/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A PlanarFe Adventure" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A PlanarFe Adventure</a></h1>
+  
+    <h2>LearnLoveCode</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="mminute.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Everyday Rails: Testing With RSpec</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-09-23T14:00:46-04:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>2:00 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="/images/pirates.jpg" /></p>
+
+<p>What&rsquo;s a pirate&rsquo;s favorite testing framework?
+ArrrrrrrrSpec!</p>
+
+<p>This past week I&rsquo;ve been working through <a href="http://www.aaronsumner.com" style="text-decoration: none; color: blue">Aaron Sumner&rsquo;s</a> <a href="http://leanpub.com/everydayrailsrspec" style="text-decoration: none; color: blue">&ldquo;Everyday Rails Testing with RSpec&rdquo;</a> in order to bone up on my TDD.  This is the CliffsNotes version since, unlike &lsquo;Romeo and Juliet&rsquo;, you can&rsquo;t run down to Blockbuster and rent the movie.  Mostly because good luck finding a Blockbuster and also, not a lot of movies about Rails&hellip; or RSpec&hellip; I didn&rsquo;t notice any model specs in the 1995 classic <a href="http://www.imdb.com/title/tt0113243" style="text-decoration: none; color: blue">&lsquo;Hackers&rsquo;</a>.</p>
+
+<!--more-->
+
+
+<p>So here it is, my notes, chapter by chapter.</p>
+
+<ul>
+<li><a href="#01" style="text-decoration: none">01. Introduction / 02. Setup</a></li>
+<li><a href="#04" style="text-decoration: none">04. Generating Test Data with Factories</a></li>
+<li><a href="#05" style="text-decoration: none">05. Basic Controller Specs</a></li>
+<li><a href="#06" style="text-decoration: none">06. Advanced Controller Specs</a></li>
+<li><a href="#07" style="text-decoration: none">07. Controller Spec Cleanup</a></li>
+<li><a href="#08" style="text-decoration: none">08. Feature Specs</a></li>
+<li><a href="#09" style="text-decoration: none">09. Speeding up Specs</a></li>
+<li><a href="#10" style="text-decoration: none">10. Testing the Rest</a></li>
+</ul>
+
+
+<div id="01"></div>
+
+
+<h2>01. Introduction / 02. Setup</h2>
+
+<p><strong>Tests should be:</strong></p>
+
+<ul>
+<li><em>Reliable</em></li>
+<li><em>Easy to write</em></li>
+<li><em>Easy to read</em></li>
+</ul>
+
+
+<p><strong>Steps for Setup:</strong></p>
+
+<ul>
+<li>Add gems</li>
+<li>Add test DB
+
+<ul>
+<li>config/database.yml (pdf pg 24)</li>
+</ul>
+</li>
+<li>Instal Rspec
+
+<ul>
+<li>bin/rails g rspec:install</li>
+</ul>
+</li>
+<li>Configure RSepc
+
+<ul>
+<li>In &lsquo;.rspec&rsquo; add &lsquo;—format documentation&rsquo;</li>
+<li>Other configurations in &lsquo;/spec/rails_helper.rb&rsquo; and &lsquo;/spec/spec_helper.rb&rsquo;</li>
+</ul>
+</li>
+<li>Create Spec executable
+
+<ul>
+<li>&lsquo;bundle binstubs rspec-core&rsquo;</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>03. Model Specs</h2>
+
+<p><strong>Describe a set of expectations</strong></p>
+
+<ul>
+<li>Each example only expects one thing</li>
+<li>Each example is explicit</li>
+<li>Each example’s description begins with a verb, not should</li>
+</ul>
+
+
+<p><strong>Describe, Context, Before and After hooks</strong></p>
+
+<ul>
+<li>can have nested describe blocks and separate contexts within describe blocks.
+
+<ul>
+<li>describe and context technically interchangeable.
+
+<ul>
+<li>good style is to use describe to outline general functionality and context to outline a specific state.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>before block is run BEFORE each example in its describe block
+
+<ul>
+<li>before :each is default behavior of before (may omit the each if desired)</li>
+</ul>
+</li>
+<li>after for cases such as disconnecting from a service</li>
+<li>Some developers use method names for the description of nested describe blocks
+
+<ul>
+<li>ex) #by_letter</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Summary:</strong></p>
+
+<ul>
+<li>Active and explicit expectations</li>
+<li>Test for what should as well as what should not happen</li>
+<li>Test edge cases</li>
+<li>Organize for readability</li>
+</ul>
+
+
+<div id="04"></div>
+
+
+<h2>04. Generating Test Data with Factories</h2>
+
+<ul>
+<li>Locate files in spec/factories directory</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:contact</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">firstname</span> <span class="s2">&quot;John&quot;</span>
+</span><span class='line'>    <span class="n">lastname</span> <span class="s2">&quot;Doe&quot;</span>
+</span><span class='line'>    <span class="n">sequence</span><span class="p">(</span><span class="ss">:email</span><span class="p">){</span><span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;johndoe</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">@example.com&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Can pass ruby  code into FactoryGirl to dynamically assign values.
+
+<ul>
+<li>pass in within a block similar to example above</li>
+</ul>
+</li>
+<li>Filenaming convention not as strict as specs (could place all factories in single file if desired) but typically save as a filename that is the plural of the model name.</li>
+<li>Using FactoryGirl in tests
+
+<ul>
+<li>.create persists the instance</li>
+<li>.build does not (sim to .new for regular ruby objects)</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="ss">:contact</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Override attributes:</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="ss">:contact</span><span class="p">,</span> <span class="ss">firstname</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Simplifying Syntax</strong></p>
+
+<p><em>spec/rails_helper.rb</em></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span><span class="o">|</span><span class="n">config</span><span class="o">|</span><span class="err"> </span>
+</span><span class='line'>  <span class="c1"># Include Factory Girl syntax to simplify calls to factories</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">include</span> <span class="no">FactoryGirl</span><span class="o">::</span><span class="no">Syntax</span><span class="o">::</span><span class="no">Methods</span>
+</span><span class='line'>  <span class="c1"># other configurations omitted ...</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>allows use of “build(:contact), create(:contact), attributes_for(:contact), build_stubbed(:contact)”</li>
+</ul>
+
+
+<p><strong>Inherited Factories</strong></p>
+
+<ul>
+<li>nested ‘factory’ blocks are factories inheriting from top level factory.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:phone</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">association</span> <span class="ss">:contact</span>
+</span><span class='line'>    <span class="n">phone</span> <span class="s1">&#39;123-555-1234&#39;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">factory</span> <span class="ss">:home_phone</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">phone_type</span> <span class="s1">&#39;home&#39;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">factory</span> <span class="ss">:work_phone</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">phone_type</span> <span class="s1">&#39;work&#39;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">factory</span> <span class="ss">:mobile_phone</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">phone_type</span> <span class="s1">&#39;mobile&#39;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>“association” creates a new ‘Contact’ on the fly for instance of a phone to belong to if one isn&rsquo;t specifically passed to the factory method</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">contact</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="ss">:contact</span><span class="p">)</span>
+</span><span class='line'><span class="n">create</span><span class="p">(</span><span class="ss">:home_phone</span><span class="p">,</span> <span class="ss">contact</span><span class="p">:</span> <span class="n">contact</span><span class="p">,</span> <span class="ss">phone</span><span class="p">:</span> <span class="s1">&#39;785-555-1234&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Fake Data</strong></p>
+
+<ul>
+<li>Faker</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:contact</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">firstname</span> <span class="p">{</span> <span class="no">Faker</span><span class="o">::</span><span class="no">Name</span><span class="o">.</span><span class="n">first_name</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">lastname</span> <span class="p">{</span> <span class="no">Faker</span><span class="o">::</span><span class="no">Name</span><span class="o">.</span><span class="n">last_name</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">email</span> <span class="p">{</span> <span class="no">Faker</span><span class="o">::</span><span class="no">Internet</span><span class="o">.</span><span class="n">email</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Advanced Associations</strong></p>
+
+<ul>
+<li>FactoryGirl callbacks</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:contact</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">firstname</span> <span class="p">{</span><span class="no">Faker</span><span class="o">::</span><span class="no">Name</span><span class="o">.</span><span class="n">first_name</span><span class="p">}</span>
+</span><span class='line'>    <span class="n">lastname</span> <span class="p">{</span><span class="no">Faker</span><span class="o">::</span><span class="no">Name</span><span class="o">.</span><span class="n">last_name</span><span class="p">}</span>
+</span><span class='line'>    <span class="n">email</span> <span class="p">{</span><span class="no">Faker</span><span class="o">::</span><span class="no">Internet</span><span class="o">.</span><span class="n">email</span>
+</span><span class='line'>    <span class="n">after</span><span class="p">(</span><span class="ss">:build</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">contact</span><span class="o">|</span>
+</span><span class='line'>      <span class="o">[</span><span class="ss">:home_phone</span><span class="p">,</span> <span class="ss">:work_phone</span><span class="p">,</span> <span class="ss">:mobile_phone</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">phone</span><span class="o">|</span>
+</span><span class='line'>        <span class="n">contact</span><span class="o">.</span><span class="n">phones</span> <span class="o">&lt;&lt;</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="ss">:phone</span><span class="p">,</span> <span class="ss">phone_type</span><span class="p">:</span> <span class="n">phone</span><span class="p">,</span> <span class="ss">contact</span><span class="p">:</span> <span class="n">contact</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<div id="05"></div>
+
+
+<h2>05. Basic Controller Specs</h2>
+
+<ul>
+<li>place in ‘spec/controllers’</li>
+</ul>
+
+
+<h3>Why test controllers?</h3>
+
+<ul>
+<li>Controllers are classes with methods too</li>
+<li>Controller specs can often be written more quickly than their integration spec counterparts</li>
+<li>Controller specs usually run more quickly than integration specs</li>
+</ul>
+
+
+<p><strong>Syntax</strong></p>
+
+<ul>
+<li>Takes http method (get/post), controller method (:index, :create, :new, :show, :edit, :update, :destroy), and (optional) parameters passed to the method</li>
+<li>attributes_for
+
+<ul>
+<li><em>&lsquo;FactoryGirl.attributes_for(:contact)&rsquo;</em> produces hash</li>
+</ul>
+</li>
+<li>Create factories for invalid data to test controllers</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:contact</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">firstname</span> <span class="p">{</span><span class="no">Faker</span><span class="o">::</span><span class="no">Name</span><span class="o">.</span><span class="n">first_name</span><span class="p">}</span>
+</span><span class='line'>    <span class="n">lastname</span> <span class="p">{</span><span class="no">Faker</span><span class="o">::</span><span class="no">Name</span><span class="o">.</span><span class="n">last_name</span><span class="p">}</span>
+</span><span class='line'>    <span class="n">email</span> <span class="p">{</span><span class="no">Faker</span><span class="o">::</span><span class="no">Internet</span><span class="o">.</span><span class="n">email</span><span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:invalid_contact</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">firstname</span> <span class="kp">nil</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Controller Spec DSL</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s1">&#39;GET #show&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;assigns the requested contact to @contacts&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">contact</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="ss">:contact</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">get</span> <span class="ss">:show</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">contact</span>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">assigns</span><span class="p">(</span><span class="ss">:contact</span><span class="p">))</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span> <span class="n">contact</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;renders the :show template&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">contact</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="ss">:contact</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">get</span> <span class="ss">:show</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">contact</span>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">render_template</span> <span class="ss">:show</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><strong>expects(assigns(:contact)).to eq contact</strong> checks that @contact varible created in the controller is equal to contact created in test.</li>
+<li><strong>expect(response).to render_template :show</strong> checks that the response from controller back to browser should render using show.html.er</li>
+<li>Can pass procs to expect
+
+<ul>
+<li><strong>expect{ post :create, contact: attributes_for(:contact, phones_attributes: @phones)}.to change(Contact, :count).by(1)</strong></li>
+</ul>
+</li>
+</ul>
+
+
+<div id='06'></div>
+
+
+<h2>06. Advanced Controller Specs</h2>
+
+<ul>
+<li>Testing authentication/login, authorization/roles</li>
+</ul>
+
+
+<div id='07'></div>
+
+
+<h2>07. Controller Spec Cleanup</h2>
+
+<ul>
+<li>Reducing redundancy and brittleness w/o sacrificing readability
+
+<ul>
+<li>share examples across describe and context blocks</li>
+<li>helper macros to reduce repetition</li>
+<li>create custom RSpec matchers</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Shared Examples</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">shared_examples</span> <span class="s1">&#39;public access to contacts&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">before</span> <span class="ss">:each</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@smith</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="ss">:contact</span><span class="p">,</span> <span class="ss">firstname</span><span class="p">:</span> <span class="s1">&#39;Lawrence&#39;</span><span class="p">,</span> <span class="ss">lastname</span><span class="p">:</span> <span class="s1">&#39;Smith&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@jones</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="ss">:contact</span><span class="p">,</span> <span class="ss">lastname</span><span class="p">:</span> <span class="s1">&#39;Jones&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">describe</span> <span class="s1">&#39;GET #index&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">context</span> <span class="s1">&#39;with params[:letter]&#39;</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">it</span> <span class="s2">&quot;populates an array of contacts starting with the letter&quot;</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">get</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">letter</span><span class="p">:</span> <span class="s1">&#39;S&#39;</span>
+</span><span class='line'>          <span class="n">expect</span><span class="p">(</span><span class="n">assigns</span><span class="p">(</span><span class="ss">:contacts</span><span class="p">))</span><span class="o">.</span><span class="n">to</span> <span class="n">match_array</span><span class="p">(</span><span class="o">[</span><span class="vi">@smith</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>        <span class="n">it</span> <span class="s2">&quot;renders the :index template&quot;</span> <span class="k">do</span>
+</span><span class='line'>          <span class="n">get</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">letter</span><span class="p">:</span> <span class="s1">&#39;S&#39;</span>
+</span><span class='line'>          <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">render_template</span> <span class="ss">:index</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">describe</span> <span class="err">“</span><span class="n">admin</span> <span class="n">access</span><span class="err">”</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it_behaves_like</span> <span class="err">‘</span><span class="kp">public</span> <span class="n">access</span> <span class="n">to</span> <span class="n">contacts</span><span class="err">’</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Helper Macros</strong></p>
+
+<ul>
+<li>Place macro files in ‘spec/support’ as a module to be included in RSpec’s configuration</li>
+<li>Inside spec/rails_helper.rb -> RSpec.configure block, add “config.include ModuleName”, and require the file at the top
+
+<ul>
+<li>when using authentication through devise or similar refer to their docs for incorporation into test suite</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Using Custom RSpec Matchers</strong></p>
+
+<ul>
+<li>place custom matchers in ‘spec/support/matchers’, one matcher per file.  Should detect files by default</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">::</span><span class="no">Matchers</span><span class="o">.</span><span class="n">define</span> <span class="ss">:require_login</span> <span class="k">do</span> <span class="o">|</span><span class="n">expected</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">match</span> <span class="k">do</span> <span class="o">|</span><span class="n">actual</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">redirect_to</span> <span class="p">\</span>
+</span><span class='line'>      <span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">url_helpers</span><span class="o">.</span><span class="n">login_path</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">failure_message</span> <span class="k">do</span> <span class="o">|</span><span class="n">actual</span><span class="o">|</span>
+</span><span class='line'>    <span class="s2">&quot;expected to require login to access the method&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">failure_message_when_negated</span> <span class="k">do</span> <span class="o">|</span><span class="n">actual</span><span class="o">|</span>
+</span><span class='line'>    <span class="s2">&quot;expected not to require login to access the method&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">description</span> <span class="k">do</span>
+</span><span class='line'>    <span class="s2">&quot;redirect to the login form&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><strong>In Spec</strong></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">it</span> <span class="s1">&#39;requires login&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">post</span> <span class="ss">:create</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">create</span><span class="p">(</span><span class="ss">:contact</span><span class="p">),</span> <span class="ss">contact</span><span class="p">:</span> <span class="n">attributes_for</span><span class="p">(</span><span class="ss">:contact</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">require_login</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<div id='08'></div>
+
+
+<h2>08. Feature Specs</h2>
+
+<ul>
+<li>Feature specs/ integration testing, aka. acceptance tests</li>
+<li>Represents how users will interact with your code</li>
+<li>within feature specs it is ok to have multiple expectations for a given scenario.
+
+<ul>
+<li>can also have expectations mid-test</li>
+</ul>
+</li>
+<li>Launchy- saves the feature spec’s current HTML to a temp file and renders in default browser
+to see result of previous step in spec insert ‘save_and_open_page’ into spec.</li>
+</ul>
+
+
+<p><strong>Including Javascript Interactions</strong></p>
+
+<ul>
+<li>Default Capybara web-driver (Rack::Test) cannot handle javascript, so ignores it.
+
+<ul>
+<li>Use Selenium instead.</li>
+<li>js: true takes into account javascript by running a javascript capable web-driver</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">feature</span> <span class="s2">&quot;About BigCo modal&quot;</span>  <span class="k">do</span>
+</span><span class='line'>  <span class="n">scenario</span> <span class="s2">&quot;toggles display of the modal about display&quot;</span><span class="p">,</span> <span class="ss">js</span><span class="p">:</span> <span class="kp">true</span> <span class="k">do</span>
+</span><span class='line'>  <span class="err">…</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>If firefox hangs at a black page and the spec fails and returns the error:</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Selenium</span><span class="o">::</span><span class="no">WebDriver</span><span class="o">::</span><span class="no">Error</span><span class="o">::</span><span class="ss">WebDriverError</span><span class="p">:</span> <span class="n">unable</span> <span class="n">to</span> <span class="n">obtain</span> <span class="n">stable</span> <span class="n">firefox</span> <span class="n">connection</span> <span class="k">in</span> <span class="mi">60</span> <span class="n">seconds</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>check gem file and remove version numbers (if present) from selenium web-driver to use the latest version.
+
+<ul>
+<li>if that fails <strong>&lsquo;bundle update selenium-webdriver&rsquo;</strong></li>
+</ul>
+</li>
+<li>Configure database cleaner in <strong>&lsquo;RSpec.configure&rsquo;</strong></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:suite</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="ss">:transaction</span>
+</span><span class='line'>  <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean_with</span> <span class="ss">:truncation</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">example</span><span class="o">|</span>
+</span><span class='line'>  <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">cleaning</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">example</span><span class="o">.</span><span class="n">run</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="no">DatabaseCleaner</span><span class="o">.</span><span class="n">clean</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Next, monkey patch ActiveRecord to use threads
+
+<ul>
+<li>Add additional file spec/support/shared_db_connection.rb</li>
+<li>Needed to share data state across the Selenium web server and the test code itself</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">mattr_accessor</span> <span class="ss">:shared_connection</span>
+</span><span class='line'>  <span class="vc">@@shared_connection</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">connection</span>
+</span><span class='line'>    <span class="vc">@@shared_connection</span> <span class="o">||</span> <span class="n">retrieve_connection</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">shared_connection</span> <span class="o">=</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">connection</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Headless options for Javascript (run test without waiting for firefox to launch):
+
+<ul>
+<li>capybara-webkit</li>
+<li>Poltergeist</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Waiting for Javascript</strong></p>
+
+<ul>
+<li>In &lsquo;<strong>rails_helper.rb</strong>&rsquo; set <strong>Capybara.default_wait_time = ##</strong> to change the amount of time that Capybara will wait before giving up on finding an item from default value of 2 to desired number of seconds.</li>
+</ul>
+
+
+<div id='09'></div>
+
+
+<h2>09. Speeding up Specs</h2>
+
+<ul>
+<li>Refactoring for speed
+
+<ul>
+<li>Amount of time it takes to run specs</li>
+<li>How quickly you can create meaningful, clear specs</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Optional Terse Syntax</strong></p>
+
+<ul>
+<li><strong>let()</strong> in place of <strong>before :each</strong>
+
+<ul>
+<li>caches the value without assigning it to an instance variable</li>
+<li>lazily evaluated. does not get assigned until a spec calls upon it.</li>
+<li><strong>let(:smith){create(:contact, firstname: &lsquo;Lawrence&rsquo;, lastname: ‘Smith’)}</strong></li>
+<li>refer to with non-symbol version of item inside let(), i.e.) :smith to smith
+
+<ul>
+<li>for tests requiring persisted data call the variable before the expects to instantiate the object and persist it to the db</li>
+<li><strong>let()!</strong> forces the var to be assigned prior to each example</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>subject{}</strong></li>
+<li><strong>it{}</strong> and <strong>specify{}</strong> (synonymous)- one line versions of it statements
+
+<ul>
+<li>subject{ build(:user, name1: ‘J’, name2: ‘Doe’) }; it{ is_expected.to be_named ‘J Doe’}</li>
+</ul>
+</li>
+<li>Shoulda - shoulda-matcher gem
+
+<ul>
+<li>include gem in :test group for access to many helpful matchers</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Mocks and Stubs</strong></p>
+
+<ul>
+<li>Mock- some object representing a real object for testing purposes. aka test doubles. Mocks do not touch the database- thus less time to set up in a test
+
+<ul>
+<li>use FactoryGirl <strong>build_stubbed()</strong> method to generate a fully-stubbed fake.  Does not persist.</li>
+</ul>
+</li>
+<li>Stub- overrides a method call on a given object and returns a predetermined value for it.
+
+<ul>
+<li><strong>allow(Contact).to receive(:order).with(‘lastname, firstname’).and_return([contact])</strong></li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Automation with Guard and Spring</strong></p>
+
+<ul>
+<li>Guard watches specified files and executes actions based on what it observes
+
+<ul>
+<li>add <strong>guard-spec</strong> to test and development groups</li>
+<li>create Guardfile from the command line: <strong>guard init spec</strong></li>
+<li>run <strong>‘guard’</strong> in terminal</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">guard</span> <span class="ss">:rspec</span><span class="p">,</span> <span class="ss">cmd</span><span class="p">:</span> <span class="s1">&#39;spring rspec --color --format documentation&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">all_on_start</span><span class="p">:</span> <span class="kp">false</span><span class="p">,</span> <span class="ss">all_after_pass</span><span class="p">:</span> <span class="kp">false</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^spec/.+_spec\.rb$}</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^lib/(.+)\.rb$}</span><span class="p">)</span>     <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;spec/lib/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="s1">&#39;spec/spec_helper.rb&#39;</span><span class="p">)</span>  <span class="p">{</span> <span class="s2">&quot;spec&quot;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^app/(.+)\.rb$}</span><span class="p">)</span>                           <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;spec/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^app/(.*)(\.erb|\.haml)$}</span><span class="p">)</span>                 <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;spec/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}#{</span><span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^app/controllers/(.+)_(controller)\.rb$}</span><span class="p">)</span>  <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;spec/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="si">}</span><span class="s2">s/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^spec/support/(.+)\.rb$}</span><span class="p">)</span>                  <span class="p">{</span> <span class="s2">&quot;spec&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="s1">&#39;app/controllers/application_controller.rb&#39;</span><span class="p">)</span>  <span class="p">{</span> <span class="s2">&quot;spec/controllers&quot;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^app/views/(.+)/.*\.(erb|haml)$}</span><span class="p">)</span>          <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;spec/features/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^spec/.+_spec\.rb$}</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^lib/(.+)\.rb$}</span><span class="p">)</span>     <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;spec/lib/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">watch</span><span class="p">(</span><span class="s1">&#39;spec/rails_helper.rb&#39;</span><span class="p">)</span>  <span class="p">{</span> <span class="s2">&quot;spec&quot;</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Spring keeps rails app running after 1st run of test suite to eliminate spin-up time and make test suite run faster on subsequent executions
+
+<ul>
+<li>add ‘spring-commands-rspec’ to gemfile :development</li>
+<li>make the new <strong>&lsquo;bin/rspec&rsquo;</strong> available as a binstub
+
+<ul>
+<li><strong>&lsquo;spring binstub rspec&rsquo;</strong></li>
+<li><strong>&lsquo;spring stop&rsquo;</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Add Tags to Tests</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">it</span> <span class="err">“</span><span class="n">processes</span> <span class="n">a</span> <span class="n">credit</span> <span class="n">card</span><span class="err">”</span><span class="p">,</span> <span class="ss">focus</span><span class="p">:</span> <span class="kp">true</span> <span class="k">do</span>
+</span><span class='line'>  <span class="err">…</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="err">$</span> <span class="n">rspec</span> <span class="err">—</span><span class="n">tag</span> <span class="n">focus</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>runs only test tagged with focus: true</li>
+<li>add to rails_helper:
+
+<ul>
+<li><strong>&lsquo;config.run_all_when_everything_filtered = true&rsquo;</strong></li>
+</ul>
+</li>
+<li>Can configure RSpec to only run/never run examples with specific tags</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span> <span class="n">config</span> <span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">filter_run</span> <span class="ss">focus</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">filter_run_excluding</span> <span class="ss">slow</span><span class="p">:</span> <span class="kp">true</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Skipping unneeded tests</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">it</span> <span class="err">“</span><span class="n">loads</span> <span class="n">a</span> <span class="n">lot</span> <span class="n">of</span> <span class="n">data</span><span class="err">”</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">skip</span> <span class="err">“</span><span class="n">no</span> <span class="n">longer</span> <span class="n">needed</span><span class="err">”</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<div id='10'></div>
+
+
+<h2>10. Testing the Rest</h2>
+
+<ul>
+<li>Email delivery, file uploads, manipulating time within specs, testing against external web services, how to test your application’s API, testing rake tasks.</li>
+<li>Emails: ‘email_spec’ gem
+
+<ul>
+<li>add to rails helper:
+
+<ul>
+<li><strong>&lsquo;config.include(EmailSpec::Helpers)&rsquo;</strong></li>
+<li><strong>&lsquo;config.include(EmailSpec::Matchers)&rsquo;</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Allows addition to spec such as:
+
+<ul>
+<li><strong>&lsquo;expect( open_last_email ).to be_delivered_from sender.email&rsquo;</strong></li>
+<li><strong>&lsquo;expect( open_last_email ).to have_reply_to sender.email&rsquo;</strong></li>
+<li><strong>&lsquo;expect( open_last_email ).to be_delivered_to recipient.email&rsquo;</strong></li>
+<li><strong>&lsquo;expect( open_last_email ).to have_subject message.subject&rsquo;</strong></li>
+<li><strong>&lsquo;expect( open_last_email ).to have_body_text message.message&rsquo;</strong>
+
+<ul>
+<li>open_last_email is helper that opens the most recently sent email and gives you access to its attributes</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Can also create new email objects and work directly with them</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">email</span> <span class="o">=</span> <span class="no">MessageMailer</span><span class="o">.</span><span class="n">create_friend_request</span><span class="p">(</span><span class="err">“</span><span class="n">someguy</span><span class="vi">@someplace</span><span class="o">.</span><span class="n">com</span><span class="err">”</span><span class="p">)</span>
+</span><span class='line'><span class="n">expect</span><span class="p">(</span> <span class="n">email</span> <span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">deliver_to</span><span class="p">(</span><span class="err">“</span><span class="n">otherguy</span><span class="vi">@otherplace</span><span class="o">.</span><span class="n">com</span><span class="err">”</span><span class="p">)</span>
+</span><span class='line'><span class="n">expect</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_subject</span> <span class="err">“</span><span class="no">Friend</span> <span class="no">Request</span><span class="err">”</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>Can also access and test against messages without extra dependency</p>
+
+<ul>
+<li>Each time a message is sent out it gets pushed to ActionMailer::Base.deliveries</li>
+<li>Can access latest by ActionMailer::Base.deliveries.last
+
+<ul>
+<li>clear delivered emails by ActionMailer::Base.deliveries = []</li>
+</ul>
+</li>
+<li>Testing: expect(ActionMailer::Base.deliveries.last).to include user.email</li>
+</ul>
+</li>
+<li><p><strong>Testing the Time</strong></p>
+
+<ul>
+<li>Timecop gem - freeze time</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">it</span> <span class="err">“</span><span class="n">wishes</span> <span class="n">the</span> <span class="n">visitor</span> <span class="n">a</span> <span class="no">Happy</span> <span class="no">New</span> <span class="no">Year</span> <span class="n">on</span> <span class="no">Jan</span> <span class="mi">1</span><span class="err">”</span>
+</span><span class='line'><span class="no">Timecop</span><span class="o">.</span><span class="n">travel</span> <span class="no">Time</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="err">“</span><span class="no">January</span> <span class="mi">1</span><span class="err">”</span><span class="p">)</span>
+</span><span class='line'><span class="n">visti</span> <span class="n">root_url</span>
+</span><span class='line'><span class="n">expect</span><span class="p">(</span> <span class="n">page</span> <span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span> <span class="err">“</span><span class="no">Happy</span> <span class="no">New</span> <span class="no">Year</span><span class="o">!</span><span class="err">”</span>
+</span><span class='line'><span class="no">Timecop</span><span class="o">.</span><span class="n">return</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><strong>Testing Web Services</strong>
+
+<ul>
+<li>VCR gem- watches for external http requests coming from your code. When it encounters one it causes the test to fail. In order to make it pass you must create a ‘cassette’ onto which to record the http transaction.  Run the test again, and the vcr captures the request and response into a file.  Now future test making the same request will use data from the file instead of making another network request to the api.</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span><span class="s1">&#39;rails_helper&#39;</span>
+</span><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">describeAddress</span><span class="p">,</span><span class="ss">:type</span><span class="o">=&gt;</span><span class="ss">:modeldo</span> <span class="n">describe</span> <span class="s1">&#39;geocoding&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s1">&#39;geocodes a new address&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="no">VCR</span><span class="o">.</span><span class="n">use_cassette</span><span class="p">(</span><span class="s1">&#39;allen_fieldhouse&#39;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">address</span> <span class="o">=</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:address</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">street</span><span class="p">:</span> <span class="s1">&#39;1651 Naismith Drive&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">city</span><span class="p">:</span>   <span class="s1">&#39;Lawrence&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">state</span><span class="p">:</span>  <span class="s1">&#39;KS&#39;</span>
+</span><span class='line'>      <span class="p">)</span>
+</span><span class='line'>      <span class="n">expect</span><span class="p">(</span><span class="n">address</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span> <span class="mi">38</span><span class="o">.</span><span class="mi">9541438</span>
+</span><span class='line'>      <span class="n">expect</span><span class="p">(</span><span class="n">address</span><span class="o">.</span><span class="n">longitude</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span> <span class="o">-</span><span class="mi">95</span><span class="o">.</span><span class="mi">2527379</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><strong>Testing Your Application’s API</strong>
+
+<ul>
+<li>API specific test go in ‘spec/requests’</li>
+<li>use simple get, post, delete, patch http verbs</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="err">‘</span><span class="n">rails_helper</span><span class="err">’</span>
+</span><span class='line'><span class="n">describe</span> <span class="err">‘</span><span class="no">Contacts</span> <span class="no">API</span><span class="err">’</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="ss">:request</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="err">‘</span><span class="n">sends</span> <span class="n">an</span> <span class="n">individual</span> <span class="n">contact</span><span class="err">’</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">contact</span> <span class="o">=</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:contact</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">get</span> <span class="err">“</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">contacts</span><span class="o">/</span><span class="c1">#{contact.id}”, nil, {‘HTTP_ACCEPT’ =&gt; ‘application/vnd.contacts.v1’}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_http_status</span><span class="p">(</span><span class="ss">:success</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">json</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">json</span><span class="o">[</span> <span class="err">‘</span><span class="n">firstname</span><span class="err">’</span> <span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span> <span class="n">contact</span><span class="o">.</span><span class="n">firstname</span>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">json</span><span class="o">[</span> <span class="err">‘</span><span class="n">lastname</span><span class="err">’</span> <span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span> <span class="n">contact</span><span class="o">.</span><span class="n">lastname</span>
+</span><span class='line'>    <span class="n">expect</span><span class="p">(</span><span class="n">json</span><span class="o">[</span> <span class="err">‘</span><span class="n">email</span><span class="err">’</span> <span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span> <span class="n">contact</span><span class="o">.</span><span class="n">email</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Quick Ref:</h2>
+
+<h3>Matchers:</h3>
+
+<ul>
+<li>.to, .not_to, .to_not</li>
+<li>be_valid</li>
+<li>include()</li>
+<li>eq / eql</li>
+<li>not==</li>
+<li>match_array - ignores order in array, contents only</li>
+<li>render_template</li>
+<li>redirect_to</li>
+<li>be_a_new()</li>
+<li>change(Contact, :count)</li>
+<li>match - used whenever a regex is being compared to the actual result</li>
+</ul>
+
+
+<h3>Gems Used:</h3>
+
+<ul>
+<li>Launchy
+
+<ul>
+<li>opens default web browser to show what the application is rendering</li>
+</ul>
+</li>
+<li>Faker
+
+<ul>
+<li>generates names, emails, other placeholders for factories</li>
+</ul>
+</li>
+<li>Bundler</li>
+<li>VCR for testing</li>
+<li>Factory Girl
+
+<ul>
+<li>Replaces Rails’ default fixtures for feeding test data to the test suite</li>
+<li><a href="https://github.com/thoughtbot/factory_girl">https://github.com/thoughtbot/factory_girl</a></li>
+<li><a href="https://robots.thoughtbot.com/get-your-callbacks-on-with-factory-girl-3-3">https://robots.thoughtbot.com/get-your-callbacks-on-with-factory-girl-3-3</a></li>
+</ul>
+</li>
+<li>github.com/railsapps/rails-composer
+
+<ul>
+<li>rails application template to automatically add spec and related config to gem file and application config files, create test db</li>
+</ul>
+</li>
+<li>RSPEC-expectation repository on github
+
+<ul>
+<li><a href="https://github.com/rspec/rspec-expectations/blob/master/README.md">https://github.com/rspec/rspec-expectations/blob/master/README.md</a></li>
+</ul>
+</li>
+<li>Faker
+
+<ul>
+<li><a href="http://www.rubydoc.info/gems/faker">http://www.rubydoc.info/gems/faker</a></li>
+<li>Forgery- Faker alternative: <a href="https://github.com/sevenwire/forgery">https://github.com/sevenwire/forgery</a></li>
+<li>ffaker- faster rewrite of faker: <a href="https://github.com/ffaker/ffaker">https://github.com/ffaker/ffaker</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mason Jennings</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-09-23T14:00:46-04:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>2:00 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://mminute.github.io/blog/2015/09/23/everyday-rails-testing-with-rspec/" data-via="" data-counturl="http://mminute.github.io/blog/2015/09/23/everyday-rails-testing-with-rspec/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/09/13/two-egg-problem/" title="Previous Post: If You Want to Ace the Interview, You've Got to Break a Few Eggs: The Two Egg Problem">&laquo; If You Want to Ace the Interview, You've Got to Break a Few Eggs: The Two Egg Problem</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/09/23/everyday-rails-testing-with-rspec/">Everyday Rails: Testing With RSpec</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/13/two-egg-problem/">If You Want to Ace the Interview, You've Got to Break a Few Eggs: The Two Egg Problem</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/08/24/finite-state-machines/"></a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/08/11/i-didnt-write-a-blog-post-for-today-so-here-are-some-pictures-of-animals/">I Didn't Write a Blog Post for Today So Here Are Some Pictures of Animals</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/25/3dify-yourself-three-dot-js/">3Dify Yourself: Three.js</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mason Jennings -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

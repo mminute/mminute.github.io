@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Flatiron&nbsp;school | A PlanarFe Adventure]]></title>
   <link href="http://mminute.github.io/blog/categories/flatiron-school/atom.xml" rel="self"/>
   <link href="http://mminute.github.io/"/>
-  <updated>2015-09-14T16:03:17-04:00</updated>
+  <updated>2015-09-23T20:27:28-04:00</updated>
   <id>http://mminute.github.io/</id>
   <author>
     <name><![CDATA[Mason Jennings]]></name>
@@ -27,6 +27,9 @@
 <p>The mass of an electron.</p>
 
 <p>I thought that I understood constants.  Unchanging. Immutable.  Then Ruby went and fucked it up.</p>
+
+<!--more-->
+
 
 <p>My understanding of constants in Ruby was that they are represented by a capitalized bareword (often all upper case) which, once defined, would cause Ruby to pitch a fit if you were to try to reassign its value.  Makes sense, right?  So when I saw this I was a bit confused:</p>
 

@@ -9,7 +9,8 @@
   <meta name="author" content="Mason Jennings">
 
   
-  <meta name="description" content="Someone from the previous Flatiron class (class 04-15, wish I could remember his name) sat with me and Sarah for a while, like, a long while &hellip;">
+  <meta name="description" content="What&rsquo;s a pirate&rsquo;s favorite testing framework?
+ArrrrrrrrSpec! This past week I&rsquo;ve been working through Aaron Sumner&rsquo;s &ldquo; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +72,45 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/09/23/everyday-rails-testing-with-rspec/">Everyday Rails: Testing With RSpec</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-09-23T14:00:46-04:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>2:00 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/pirates.jpg" /></p>
+
+<p>What&rsquo;s a pirate&rsquo;s favorite testing framework?
+ArrrrrrrrSpec!</p>
+
+<p>This past week I&rsquo;ve been working through <a href="http://www.aaronsumner.com" style="text-decoration: none; color: blue">Aaron Sumner&rsquo;s</a> <a href="http://leanpub.com/everydayrailsrspec" style="text-decoration: none; color: blue">&ldquo;Everyday Rails Testing with RSpec&rdquo;</a> in order to bone up on my TDD.  This is the CliffsNotes version since, unlike &lsquo;Romeo and Juliet&rsquo;, you can&rsquo;t run down to Blockbuster and rent the movie.  Mostly because good luck finding a Blockbuster and also, not a lot of movies about Rails&hellip; or RSpec&hellip; I didn&rsquo;t notice any model specs in the 1995 classic <a href="http://www.imdb.com/title/tt0113243" style="text-decoration: none; color: blue">&lsquo;Hackers&rsquo;</a>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/09/23/everyday-rails-testing-with-rspec/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/09/13/two-egg-problem/">If You Want to Ace the Interview, You've Got to Break a Few Eggs: The Two Egg Problem</a></h1>
     
     
@@ -91,52 +131,12 @@
 
 <p>Someone from the previous Flatiron class (class 04-15, wish I could remember his name) sat with me and <a href="https://twitter.com/sarahsalder">Sarah</a> for a while, like, a long while sometime in the middle of August to walk us through a couple of questions that he or his classmates had been asked during technical interviews.  One was the <a href="https://en.wikipedia.org/wiki/Birthday_problem">&ldquo;Birthday Paradox&rdquo;</a> and the other was the <b><em>&ldquo;Two Egg Problem&rdquo;</em></b>.</p>
 
-<h4>The Setup:</h4>
-
-<p>It goes something like this:
-There is a 100 story building.  You have two identical eggs.  An egg, when dropped from a floor will either break or not break.  If the egg breaks when dropped from some floor &lsquo;n&rsquo; then it would have broken from every floor above that floor. If the egg does not breaks when dropped from some floor &lsquo;n&rsquo; then it would have survived the fall from every floor below the floor &lsquo;n&rsquo;.  If the egg is unbroken it can be picked up and dropped again.  What strategy should you adopt to minimize the number of egg drops it takes to find the highest floor from which an egg can be dropped without breaking.</p>
-
-<h4>The REAL Question:</h4>
-
-<p>The solution that interviewer is looking for optimizes for the worst case scenario, or, as phrased in the DataGenetics article linked below, &ldquo;Minimization of Maximum Regret&rdquo;.  So what does that mean?  Your solution should ensure that, in the absolute worst case scenario, finding the floor from which a dropped egg will break takes as few drops as possible.  Or, stated a bit differently, the most number of drops required to identify the floor from which the egg will break is as small as possible.</p>
-
-<h4>The Buildup:</h4>
-
-<p><em>First let&rsquo;s examine the &ldquo;One Egg Problem&rdquo;.</em></p>
-
-<p>Ok, so worst case scenario is that the egg breaks only when dropped from the 100th floor.  How do we find this out?  Well, since we only have one egg to work with we have to start at the first floor (the floor above the ground floor. Let&rsquo;s do this <a href="https://en.wikipedia.org/wiki/Storey#Lift.2FElevator_buttons">European Style,</a> ok?) and work our way up one floor at a time.  If we skipped up a floor, say instead of starting on the first floor, we start on the second, and the egg breaks we can&rsquo;t know if it would have also broken when dropped from the first floor because we are out of eggs.  So, worst case scenario we have to drop that damn egg 100 times and either we get to know the inside of the elevator reeeeeeeeal well or we&rsquo;re exhausted from a 100 storey climb.</p>
-
-<p><em>Now let&rsquo;s examine the &ldquo;Many Egg Problem&rdquo;.</em></p>
-
-<p>So now we have infinite eggs.  Omelettes forever!!!!!!!  The problem is now a binary search, broken or unbroken after a drop.  We halve the search range after each test.  We drop an egg from floor 50 and it survives.  We now only have 50 floors to search through.  We test in the middle of the remaining floors (75) and the egg survives again.  Two drops and we&rsquo;ve narrowed the range down to 25.  We halve the range again- floor 87- and the super egg still doesn&rsquo;t break.  Three drops.  Half again, 93rd floor, egg survives. Four. And again, 96th, egg survives. Five. Again, 98, survives. Six. Again, 99, survives. Seven and we know the floor that causes the break is the 100th.</p>
-
-<p><img src="/images/many_egg_solution.jpg" alt="Cool Runnings Lucky Egg"></p>
-
-<h4>The Solution:</h4>
-
-<p><em>Back to Two Eggs.  I miss my infinite eggs already.  Later little buddies:</em></p>
-
-<p>Ok, so we have two eggs.  Where do we start?  Let&rsquo;s just say we want to halve the search range so we drop an egg at floor 50.  It survives. So now we floor by floor.  Finally second egg drops on floor 100.  Our test took 51 drops.  That&rsquo;s a lot better than 100 like we had using only one egg but still a lot of drops.</p>
-
-<p>Let&rsquo;s try it again but this time let&rsquo;s start at floor ten and go up by ten floor each time.  Drop @10.  Egg survives.  @20, @30, @40, @50, @60, @70, @80, @90.  That tenacious egg survives them all.  We go up 10 floor again to floor 100 and the egg breaks!  You are not indestructible my ovoid friend!  Back down to floor 91 and step up one by one until&hellip; Hey, it survives every one!  So thats 19 drops by my count. A lot better.  But what if it had broken at floor 50 instead?  That would mean drops @10, @20, @30, @40, @50, @41..@49 if the egg were to break at the 49th floor.  Sooo, 14 drops.  There&rsquo;s a bit of a gap there in the number of drops it took to reach an answer when the highest safe drop floor was 99 versus 49, and in that gap is the heart of the problem.  We want to make that distribution in the number of drops required more uniform.</p>
-
-<p>The number of drops it takes to figure out the answer in the worst case scenario should always be the same.  That&rsquo;s the goal in making a uniform distribution.  So let&rsquo;s say that the egg drops at floor 9.  Going by tens it takes a drop at floor 10, then 1..9 for a total of 10 drops.  Now let&rsquo;s say that it breaks at floor 19.  Again going by ten it takes drops at 10, 20, 11..19 for a total of 11 drops.  If we want to create a uniform distribution in the number of drops to find the answer in the worst case scenario we have to account for the extra drop that it took to from the first case (breaks at 9) to the second case (breaks at 19).  If instead of jumping up 10 floors from 10 to 10 we instead jump up 9 floors from 10 to 19 (accounting for the extra multi-floor step) then the worst case scenario- the egg breaks at floor 18- takes drops at 10, 19, 11..18 for 10 drops again!  There, there is an even distribution!  So that&rsquo;s the trick of it.  Every time we make a multi-story leap up the building the distance that we go up should be reduced by one in order to account for the additional drop.</p>
-
-<p>Now that we have the concept of it we can go a little more abstract. If we call the first floor from which we drop an egg &lsquo;n&rsquo; then the next floor from which we drop an egg should be n-1 above the first drop point.  The one after that should be n-2 above the last and so on.  So it end up looking something like:</p>
-
-<p><strong>n + (n-1) + (n-2) + (n-3) + &hellip; + 1 >= (number of floors in the building)</strong></p>
-
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/First_six_triangular_numbers.svg" alt="Triangular Number Image"></p>
-
-<p>This summation is identical to the formula for <a href="https://en.wikipedia.org/wiki/Triangular_number">Triangular Numbers</a> which simplifies to <strong>n(n+1)/2</strong>.  So, I guess it&rsquo;s assumed that you would know this.  Don&rsquo;t ask me why.  For 100 floors that&rsquo;s <strong>100 = n(n+1)/2</strong> which is equivalent to <strong>n<sup>2</sup> + n - 200</strong>.  If you solve that equation for n using the quadratic equation you get ~ 13.65. Let&rsquo;s round that up to 14 since we are working with whole floors.  So, after all that, our strategy is to drop the egg at floor 14 (n), 27 (n + n-1), 39, 50, 60, 69, 77, 84, 90, 95, and 100.  Every worst case scenario requires 14 drops and we are done!</p>
-
-<p><img src="/images/two_egg_solution.jpg" alt="Cool Runnings Lucky Egg"></p>
-
-<p><a href="http://datagenetics.com/blog/july22012/index.html">
-  DataGenetics- The Two Egg Probem
-</a></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/09/13/two-egg-problem/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -169,171 +169,12 @@ There is a 100 story building.  You have two identical eggs.  An egg, when dropp
 
 <p>&ldquo;Finite State Machines&rdquo; is one of those terms that I&rsquo;ve heard mentioned but never found the time to look into.  Now that I&rsquo;ve finished my three months at the Flatiron School I figured that I would give it a look.</p>
 
-<p>Finite state machines (FSM), aka Finite State Automata (ooooh, I like that better!) are machines that inhabit one of a finite number of states at a given time and answer the questions:</p>
-
-<p>&#9;1. “What are all the distinct states of the system?”</p>
-
-<p>&#9;2. “To what stimuli will the system respond in a given state?”</p>
-
-<p>&#9;3. “What state will the system be in if it is presented with a given stimulus in a given state?”</p>
-
-<p>&#9;4. “What sequence of inputs are needed so that the system will be in a particular state?”</p>
-
-<p>A finite state machine is defined by it’s states and the triggering conditions for each transition where &lsquo;state&rsquo; describes the status of a system waiting to execute a transition and a &lsquo;transition&rsquo; is a set of actions to be executed when a condition is fulfilled or when an event is received. Some FSM also allow an action to be associated with a state.  An entry action is an action executed when transitioning <em>into</em> a state while an exit action executes when transitioning to a new state.</p>
-
-<h2>So What Does All That Mean?</h2>
-
-<p><img src="/images/traffic_light_FSM.png" width="400"></p>
-
-<p>This is my (albeit new and limited) understanding of the purpose of a finite state automata:  <strong>it can control what inputs an object responds to at a given time and change the response to those same inputs based on the object state</strong> which is determined by actions that have been executed on that object in the past.</p>
-
-<p>Let&rsquo;s look at the diagram above representing a stop light.  We&rsquo;ll start at the red light (S1).  In this example the traffic light can receive only input from the timer.  Any input from the timer to the light less than 20 fails to satify the condition required for the light to transition from red to green so the light will remain red.  A timer input == 20 causes the traffic light to transition.  The transition from red to green executes an action to reset (exit action of red state) and start the timer (entry action of green state).  The timer again send inputs to the traffic light.  This time the traffic light will not respond until the timer input == 15, at which point the light will transition from green to yellow and once again reset and start the timer.  The timer inputs now do not satisfy the conditions to transition until until the timer input == 5 which triggers a transition to our start point of the red light and yet again resets and starts the timer.</p>
-
-<h3>So Here Is My Attempt At Another Simplified Example</h3>
-
-<p><img src="/images/FSM_Transmission.png" width="800"></p>
-
-<p>We have an imaginary car with an imaginary transmission.  It is a four speed transmission with a neutral gear (If you want to parallel park this imaginary car go ahead, hop out and push it.  Imagination doesn&rsquo;t weigh much.) which means the transmission can be in one of five possible states.</p>
-
-<p>[:neutral, :first, :second, :third, :fourth] - <strong><em>“What are all the distinct states of the system?”</em></strong></p>
-
-<p>The driver can give the transmission inputs to shift_up or shift_down and the transmission will behave just as you would expect.  1st gear can accept an input to shift up or shift down.  So can second and third.</p>
-
-<p>The ends are where it gets a bit more interesting.  The tranmission will respond to an input to shift_up but it will not respond to an input to shift_down when it is in a :neutral state.  Similarly, when the transmisson is in a state of :fourth it will only respond to an input of shift_down; shift_up will have no effect.  This answers the question <strong><em>“To what stimuli will the system respond in a given state?”</em></strong></p>
-
-<p>So, no entry or exit actions, only one input (binary +/-) but I think it qualifies as a simple state machine.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">class</span> <span class="nc">TransmissionStateMachine</span>
-</span><span class='line'>    <span class="kp">attr_reader</span> <span class="ss">:state</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="no">TransmissonStates</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:neutral</span><span class="p">,</span> <span class="ss">:first</span><span class="p">,</span> <span class="ss">:second</span><span class="p">,</span> <span class="ss">:third</span><span class="p">,</span> <span class="ss">:fourth</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">initialize</span>
-</span><span class='line'>      <span class="vi">@state</span> <span class="o">=</span> <span class="ss">:neutral</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">shift_up</span>
-</span><span class='line'>      <span class="k">if</span> <span class="n">state</span> <span class="o">!=</span> <span class="ss">:fourth</span>
-</span><span class='line'>        <span class="n">idx</span> <span class="o">=</span> <span class="no">TransmissonStates</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-</span><span class='line'>        <span class="vi">@state</span> <span class="o">=</span> <span class="no">TransmissonStates</span><span class="o">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span>
-</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Shifted up to </span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2"> gear!&quot;</span>
-</span><span class='line'>      <span class="k">else</span>
-</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;You&#39;re in top gear dummy!&quot;</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">shift_down</span>
-</span><span class='line'>      <span class="k">if</span> <span class="n">state</span> <span class="o">!=</span> <span class="ss">:neutral</span>
-</span><span class='line'>        <span class="n">idx</span> <span class="o">=</span> <span class="no">TransmissonStates</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-</span><span class='line'>        <span class="vi">@state</span> <span class="o">=</span> <span class="no">TransmissonStates</span><span class="o">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span>
-</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;Shifted down to </span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2"> gear!&quot;</span>
-</span><span class='line'>      <span class="k">else</span>
-</span><span class='line'>        <span class="nb">puts</span> <span class="s2">&quot;I can&#39;t go any lower down!  Is there a negative 1 gear?!?&quot;</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">t</span> <span class="o">=</span> <span class="no">TransmissionStateMachine</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Ready to go!&quot;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_up</span> <span class="c1">#Shifted up to first gear!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_up</span> <span class="c1">#Shifted up to second gear!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_up</span> <span class="c1">#Shifted up to third gear!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_up</span> <span class="c1">#Shifted up to fourth gear!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_up</span> <span class="c1">#You&#39;re in top gear dummy!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_down</span> <span class="c1">#Shifted down to third gear!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_down</span> <span class="c1">#Shifted down to second gear!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_down</span> <span class="c1">#Shifted down to first gear!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_down</span> <span class="c1">#Shifted down to neutral gear!</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">shift_down</span> <span class="c1">#I can&#39;t go any lower down!  Is there a negative 1 gear?!?</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://www.quora.com/What-are-applications-of-finite-state-machines">
-So where are finite state machines used?
-</a></p>
-
-<p>&#9;- A compiled regexp is a finite state machine.</p>
-
-<p>&#9;- Network protocols which are state based like TCP.</p>
-
-<p>&#9;- Lexical analyzer or token parser: It uses FSM to parse tokens into keywords or identifiers which are further used by the compiler.</p>
-
-<p>&#9;- Vending machines.</p>
-
-<p>&#9;- Video game AI.</p>
-
-<p>&#9;- CPU controllers.</p>
-
-<h2>Sources:</h2>
-
-<p><a href="https://www.youtube.com/watch?v=hJIST1cEf6A">
-Finite State Machines Explained- Video
-</a>
-<a href="http://people.cs.vt.edu/~kafura/ComputationalThinking/Class-Notes/FSM.pdf">
-Finite State Machines- A Short Explanation
-</a>
-<a href="http://www.cs.princeton.edu/courses/archive/spr06/cos116/FSM_Tutorial.pdf">
-How To Design A Finite State Machine
-</a>
-<a href="http://www.sitepoint.com/state-machines-in-ruby/">
-State Machines in Ruby by Dave Kennedy
-</a>
-<a href="https://github.com/pluginaweek/state_machine">
-State Machine Gem
-</a>
-<a href="http://web.cs.ucdavis.edu/~rogaway/classes/120/spring13/eric-applications.pdf">
-Finite State Machine Applications
-</a></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/08/24/finite-state-machines/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -362,21 +203,12 @@ Finite State Machine Applications
 
   <div class="entry-content"><p><img src="/images/siberian-hamster-pic-so-cute-animal-pictures-image-600x472.jpg" /></p>
 
-<p><img src="/images/259758xcitefun-cute-animals-0.jpg" /></p>
-
-<p><img src="/images/tumblr-jpg.jpg" /></p>
-
-<p><img src="/images/02.jpg" /></p>
-
-<p><img src="/images/catduck.jpg" /></p>
-
-<p><img src="/images/Beautiful-Pictures-Of-Cute-Animals-6.jpg" /></p>
-
-<p><img src="/images/Top-30-most-funniest-and-humorous-animals-pictures.-25.jpg" /></p>
-
-<p><img src="/images/funny_animal_pictures_18.jpg" /></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/08/11/i-didnt-write-a-blog-post-for-today-so-here-are-some-pictures-of-animals/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -407,206 +239,12 @@ Finite State Machine Applications
 
 <p><a href="http://threejs.org/"><strong>Three.js</strong></a> is a Javascript library designed to be used to render 3D objects and animations in the browser using <a href="https://www.khronos.org/webgl/">WebGL.</a>  It allows you to create animations without relying on proprietary plugins using the end-users GPU and as well as providing a bunch of classes and functions to let you skip a whole bunch of programming and move straight to the animating.</p>
 
-<p>It breaks down into four basic components:</p>
-
-<ul>
-<li><a href="http://threejs.org/docs/index.html#Reference/Scenes/Scene"><strong>A Scene</strong></a>
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="kd">var</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">();</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure></li>
-<li><a href="http://threejs.org/docs/index.html#Reference/Cameras/PerspectiveCamera"><strong>A Camera</strong></a>
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="kd">var</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span> <span class="mi">75</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="o">/</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1000</span> <span class="p">);</span>
-</span><span class='line'>    <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure></li>
-<li><a href="http://threejs.org/docs/index.html#Reference/Renderers/WebGLRenderer"><strong>A Renderer</strong></a>
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="kd">var</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">();</span>
-</span><span class='line'>    <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span> <span class="p">);</span>
-</span><span class='line'>    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span> <span class="p">);</span>
-</span><span class='line'>    <span class="nx">renderer</span><span class="p">.</span><span class="nx">setClearColor</span><span class="p">(</span> <span class="mh">0xffffff</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure></li>
-<li><a href="http://threejs.org/docs/index.html#Reference/Core/Geometry
-"><strong>One or more geometric objects</strong></a>
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>      <span class="kd">var</span> <span class="nx">geometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span> <span class="p">);</span>
-</span><span class='line'>      <span class="kd">var</span> <span class="nx">material</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">(</span> <span class="p">{</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">}</span> <span class="p">);</span>
-</span><span class='line'>      <span class="kd">var</span> <span class="nx">cube</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span> <span class="nx">geometry</span><span class="p">,</span> <span class="nx">material</span> <span class="p">);</span>
-</span><span class='line'>      <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span> <span class="nx">cube</span> <span class="p">);</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure></li>
-<li><strong>A Render function</strong>
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>      <span class="kd">var</span> <span class="nx">render</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span><span class="nx">requestAnimationFrame</span><span class="p">(</span> <span class="nx">render</span> <span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span><span class="p">(</span><span class="nx">$direction</span> <span class="o">===</span> <span class="mi">1</span><span class="p">){</span>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span><span class="nx">$counter</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">){</span><span class="nx">cube</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.03</span><span class="p">;</span> <span class="nx">$counter</span><span class="o">++</span><span class="p">}</span>
-</span><span class='line'>          <span class="k">else</span><span class="p">{</span><span class="nx">$direction</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span><span class="nx">$counter</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">){</span><span class="nx">cube</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="mf">0.03</span><span class="p">;</span> <span class="nx">$counter</span><span class="o">++</span><span class="p">}</span>
-</span><span class='line'>          <span class="k">else</span><span class="p">{</span><span class="nx">$direction</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
-</span><span class='line'>        <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">);</span>
-</span><span class='line'>      <span class="p">};</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure></li>
-</ul>
-
-
-<p>The scene, camera, and geometry are pretty self explanatory (though you try putting together some advanced geometries if you think it&rsquo;s so easy!).  The renderer does all the heavy lifting to display your magnificent creation, but the fun happens in the render function.  This is where your talent and skill come into play on the game grid you master of space and motion, you.  Within the render function is where you can do things like move, rotate, and deform objects.  <a href="http://threejs.org/docs/#Reference/Core/Object3D">Go on, get crazy with your bad self!</a>  The documentation is a bit cumbersome to traverse but given more time an effort than I feel like putting into this right now you can create some pretty impressive stuff.  Like this:</p>
-
-<p><a href="http://hexgl.bkcore.com/"><img src="/images/gameDemoScreenShot.png" /></a></p>
-
-<p>Here&rsquo;s the quick animation that I played with.  It&rsquo;s basically the code from the Three.js &lsquo;Getting Started&rsquo; but I tweaked a couple different things until I got tired and settled on a bouncing cube.</p>
-
-<p>  <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>    <span class="o">&lt;</span><span class="nx">html</span><span class="o">&gt;</span>
-</span><span class='line'>      <span class="o">&lt;</span><span class="nx">head</span><span class="o">&gt;</span>
-</span><span class='line'>        <span class="o">&lt;</span><span class="nx">title</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">first</span> <span class="nx">Three</span><span class="p">.</span><span class="nx">js</span> <span class="nx">app</span><span class="o">&lt;</span><span class="err">/title&gt;</span>
-</span><span class='line'>        <span class="o">&lt;</span><span class="nx">style</span><span class="o">&gt;</span>
-</span><span class='line'>          <span class="nx">body</span> <span class="p">{</span> <span class="nx">margin</span><span class="o">:</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
-</span><span class='line'>          <span class="nx">canvas</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">100</span><span class="o">%</span><span class="p">;</span> <span class="nx">height</span><span class="o">:</span> <span class="mi">100</span><span class="o">%</span> <span class="p">}</span>
-</span><span class='line'>        <span class="o">&lt;</span><span class="err">/style&gt;</span>
-</span><span class='line'>      <span class="o">&lt;</span><span class="err">/head&gt;</span>
-</span><span class='line'>      <span class="o">&lt;</span><span class="nx">body</span><span class="o">&gt;</span>
-</span><span class='line'>        <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;js/three.min.js&quot;</span><span class="o">&gt;&lt;</span><span class="err">/script&gt;</span>
-</span><span class='line'>        <span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">();</span>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span> <span class="mi">75</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="o">/</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1000</span> <span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">();</span>
-</span><span class='line'>          <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span> <span class="p">);</span>
-</span><span class='line'>          <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span> <span class="p">);</span>
-</span><span class='line'>          <span class="nx">renderer</span><span class="p">.</span><span class="nx">setClearColor</span><span class="p">(</span> <span class="mh">0xffffff</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">geometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span> <span class="p">);</span>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">material</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">(</span> <span class="p">{</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">}</span> <span class="p">);</span>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">cube</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span> <span class="nx">geometry</span><span class="p">,</span> <span class="nx">material</span> <span class="p">);</span>
-</span><span class='line'>          <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span> <span class="nx">cube</span> <span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">$direction</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">render</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nx">requestAnimationFrame</span><span class="p">(</span> <span class="nx">render</span> <span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>            <span class="k">if</span><span class="p">(</span><span class="nx">$direction</span> <span class="o">===</span> <span class="mi">1</span><span class="p">){</span>
-</span><span class='line'>              <span class="k">if</span><span class="p">(</span><span class="nx">$counter</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">){</span><span class="nx">cube</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.03</span><span class="p">;</span> <span class="nx">$counter</span><span class="o">++</span><span class="p">}</span>
-</span><span class='line'>              <span class="k">else</span><span class="p">{</span><span class="nx">$direction</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>            <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>              <span class="k">if</span><span class="p">(</span><span class="nx">$counter</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">){</span><span class="nx">cube</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">-=</span> <span class="mf">0.03</span><span class="p">;</span> <span class="nx">$counter</span><span class="o">++</span><span class="p">}</span>
-</span><span class='line'>              <span class="k">else</span><span class="p">{</span><span class="nx">$direction</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">$counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
-</span><span class='line'>            <span class="nx">cube</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="mf">0.01</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="nx">render</span><span class="p">();</span>
-</span><span class='line'>        <span class="o">&lt;</span><span class="err">/script&gt;</span>
-</span><span class='line'>      <span class="o">&lt;</span><span class="err">/body&gt;</span>
-</span><span class='line'>    <span class="o">&lt;</span><span class="err">/html&gt;</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>  The animation may be simple but that isn&rsquo;t much code for a rendered scene.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/07/25/3dify-yourself-three-dot-js/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -635,152 +273,12 @@ Finite State Machine Applications
 
   <div class="entry-content"><p>I ran across a blog post explaining how you can use regular expressions to determine if a number is prime.  It seems like an odd use and it has been a while (kinda? Like four whole weeks!) since I’ve used regular expressions so it took a a bit of time and a whole lot of whiteboard space to figure out what was happening so this is the post topic that you’re getting god dammit!</p>
 
-<p>So how about I show you what it looks like before we step through it:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def primes_with_regex?(num)
-</span><span class='line'>  num_as_1s = "1" * num
-</span><span class='line'>  ! /^1?$|^(11+?)\1+$/.match(num_as_1s)
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Or, more succinctly:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def primes_with_regex?(num)
-</span><span class='line'>   ("1" * num) !~ /^1?$|^(11+?)\1+$/
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Here’s how it works, broken down piece by piece:</p>
-
-<ul>
-<li><p>Create a string composed of “1” (or really any character) of length ‘num’.</p></li>
-<li><p>‘!’ negates the matching condition.  If we find a match for either of our two regular expressions then the number passed to our method is not a prime and the method returns false.</p>
-
-<p><strong>&ndash;>!&lt;&ndash;</strong> /^1?$|^(11+?)\1+$/.match(num_as_1s)</p></li>
-<li><p>Check to see if the number passed to the method is zero or one.  These numbers are not prime so our method should return false.</p>
-
-<p>! /<strong>&ndash;>^1?$&lt;&ndash;</strong>|^(11+?)\1+$/.match(num_as_1s)</p>
-
-<ul>
-<li>‘<strong>^</strong>’ anchors the expression to the beginning of the string</li>
-<li>‘<strong>1?</strong>’ uses the ‘lazy’ quantifier to match zero or one occurrences of ‘1’.</li>
-<li>‘<strong>$</strong>’ checks that the zero or one occurrences of ‘1’ are also anchored to the end of the string.</li>
-<li>If ‘1’ occurs either zero or one times and is anchored to both the beginning and the end of the string the regular expression will match and, though our negation, our method will return false thereby correctly stating that the numbers 1 and 0 are not prime.</li>
-</ul>
-</li>
-<li><p>Checks to see if the string of ‘1’s can be evenly divided into groups of some length n.</p>
-
-<p>  ! /^1?$|<strong>&ndash;>^(11+?)\1+$&lt;&ndash;</strong>/.match(num_as_1s)</p>
-
-<ul>
-<li><p>The regular expression will match (and, through negation, our method will return false) if the string can be every divided into groups.  If the string can be evenly divided into segments of length n then the repetition of the groups will naturally abut the beginning and the end of the string, thereby satisfying the beginning and end anchor conditions.</p>
-
-<p>! /^1?$|^<strong>&ndash;>(11+?)&lt;&ndash;</strong>\1+$/.match(num_as_1s)</p></li>
-<li><p>Creates a matching group of two or more ‘1’s lazily.  I think of the ‘?’ as being generous more than lazy.  If a subsequent portion of the regular expression could use some of the characters that it has grabbed to match and the loss of those characters will not cause the first portion to no longer match, then it will generously give those characters away to make the entirety of the expression return true.  All for one and one for all!!!  This matching group is then stored as something like “Matching Group 1” as shown below.</p>
-
-<p>! /^1?$|^(11+?)<strong>&ndash;>\1&lt;&ndash;</strong>+$/.match(num_as_1s)</p></li>
-</ul>
-
-
-<p>Here is an example of a capturing group that may make the concept more clear:</p>
-
-<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(\d\d) + (\d\d) = \2 + \1 matches &ldquo;12 + 65 = 65 + 12&rdquo;</span></code></pre></td></tr></table></div></figure></p>
-
-<ul>
-<li><p>Mushes together one or more occurrences of the matching group in an effort to create a collection of them that abut the beginning and end of the string.</p>
-
-<p>! /^1?$|^(11+?)\1<strong>&ndash;>+&lt;&ndash;</strong>$/.match(num_as_1s)</p></li>
-</ul>
-</li>
-</ul>
-
-
-<p>So what does it actually do?</p>
-
-<p><img src="/images/Primes_w_regex.png" /></p>
-
-<p>That’s cute, but should I use it?
-No!  Why would you determine primes using a string like some kind of asshole?  Computers are good with numbers.  Just let ‘em do their thing.  That’s not just my opinion.  Shakira said that hip’s don’t lie.  Neither does benchmark.  Let’s see what it says:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Benchmark.bmbm do |x|
-</span><span class='line'>  x.report("Prime_w_Regex") { for i in 0..999 do
-</span><span class='line'>                                prime_with_regex?(i)
-</span><span class='line'>                              end}
-</span><span class='line'>
-</span><span class='line'>  x.report("Prime_by_Math")  { for i in 0..999 do
-</span><span class='line'>                                is_prime?(i)
-</span><span class='line'>                               end}
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  x.report("Prime_by_Prime_Mod")  { for i in 0..999 do
-</span><span class='line'>                                      Prime.prime?(i)
-</span><span class='line'>                                    end}
-</span><span class='line'>
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>Rehearsal ------------------------------------------------------
-</span><span class='line'>Prime_w_Regex        0.170000   0.000000   0.170000 (  0.172319)
-</span><span class='line'>Prime_by_Math        0.000000   0.000000   0.000000 (  0.003190)
-</span><span class='line'>Prime_by_Prime_Mod   0.000000   0.000000   0.000000 (  0.002690)
-</span><span class='line'>--------------------------------------------- total: 0.170000sec
-</span><span class='line'>
-</span><span class='line'>                         user     system      total        real
-</span><span class='line'>Prime_w_Regex        0.170000   0.000000   0.170000 (  0.172192)
-</span><span class='line'>Prime_by_Math        0.000000   0.000000   0.000000 (  0.002153)
-</span><span class='line'>Prime_by_Prime_Mod   0.010000   0.000000   0.010000 (  0.002359)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So that only took, like 72 times as long.  Sooooooo, novelty much? Try adding an extra zero to those ranges and running the test again.  Just try it, I&rsquo;ll wait&hellip;</p>
-
-<h3>Sources:</h3>
-
-<p>  <strong>The Blog:</strong></p>
-
-<p>  <a href="http://www.noulakaz.net/2007/03/18/a-regular-expression-to-check-for-prime-numbers/">http://www.noulakaz.net/2007/03/18/a-regular-expression-to-check-for-prime-numbers/</a></p>
-
-<p>  <strong>Regex Cheatsheet (More Quantifiers):</strong></p>
-
-<p>  <a href="http://www.rexegg.com/regex-quickstart.html">http://www.rexegg.com/regex-quickstart.html</a></p>
-
-<p>  <strong>Pickaxe- Regular Expressions- p.100</strong></p>
-
-<p>  Thomas, Dave. Programming Ruby 1.9 &amp; 2.0: The Pragmatic Programmers' Guide. 2013</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/07/08/primes-with-regex/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -813,280 +311,12 @@ No!  Why would you determine primes using a string like some kind of asshole?  C
 
 <p>I realized the other day that, while I’ve been using gems for awhile now I didn’t actually know what goes into building and publishing one.  Let’s fix that.</p>
 
-<h3>What is a Gem?</h3>
-
-<p>A gem is the standard format for distributing Ruby programs and libraries, typically through the RubyGems package manager.</p>
-
-<h3>OK, so let’s make one.</h3>
-
-<p>Fine (pushy…).</p>
-
-<p>I started out writing out the steps to properly set up your file structure and build your gem.  It looked something like this:</p>
-
-<p><strong>I.Create a directory with the name of your gem.</strong></p>
-
-<p>It should look something like this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root
-</span><span class='line'>├── bin
-</span><span class='line'>├── lib
-</span><span class='line'>└── test</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Ruby Gem Naming convention as per RubyGems.org:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>GEM NAME                       REQUIRE STATEMENT                   MAIN CLASS OR MODULE
-</span><span class='line'>ruby_parser                    require 'ruby_parser'               RubyParser
-</span><span class='line'>rdoc-data                      require 'rdoc/data'                 RDoc::Data
-</span><span class='line'>net-http-persistent            require 'net/http/persistent'       Net::HTTP::Persistent
-</span><span class='line'>net-http-digest_auth           require 'net/http/digest_auth'      Net::HTTP::DigestAuth</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>II. WRITE YO CODE!</strong></p>
-
-<p>And put it in the ‘lib’ folder.  The convention is to have one Ruby file with the name of your gem, since that will be what is loaded when someone requires your gem.  This file is in charge of setting up your gem’s code and application program interface.</p>
-
-<p><em>Require additional files:</em></p>
-
-<ul>
-<li>These should go into a subfolder within lib named for the gem and required in your main gem file.  These dependencies will also be listed in your gem spec.  We’ll get to that in a bit.</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>└── lib
-</span><span class='line'>├── poezix
-</span><span class='line'>│  └── more_poezix.rb
-</span><span class='line'>└── poezix.rb</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>III. Build the gemspec.</strong></p>
-
-<p>The gem spec contains all the information about your gem.  Who made it, what it’s for, its version, homepage, yada yada yada.  It’s al in the gemspec.  You can even make a gem without filling out the  required attributes of your gem in a gem spec file.  So it’s kinda important.</p>
-
-<p><strong>IV. Build the gem:</strong></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem build poezix.gemspec</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>V. Install the gem locally.</strong></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem install ./poezix-0.0.1.gem</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>VI. Test yo ish!</strong></p>
-
-<p>You don’t want to send out non-functional code with all your contact info in it.  Include a test suite and documentation.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>.
-</span><span class='line'>├── Rakefile
-</span><span class='line'>├── poezix.gemspec
-</span><span class='line'>├── bin
-</span><span class='line'>│   └── poezix
-</span><span class='line'>├── lib
-</span><span class='line'>│   ├── poezix
-</span><span class='line'>│   │   └── more_poezix.rb
-</span><span class='line'>│   └── poezix.rb
-</span><span class='line'>└── test
-</span><span class='line'>    └── test_poezix.rb</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>% irb
-</span><span class='line'>>> require 'poezix'
-</span><span class='line'>#=> true
-</span><span class='line'>“twice”.upon_a_midnight_dreary{puts ‘Nevermore!’}
-</span><span class='line'>#=> Nevermore!
-</span><span class='line'>#=> Nevermore!</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>VII. Document your code with RDoc, Yard, or something similar.</strong></p>
-
-<p><strong>VIII. Publish!</strong></p>
-
-<p>Create an account at ruby gems.org.</p>
-
-<p>Setup your account on your computer</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>curl -u qrush https://rubygems.org/api/v1/api_key.yaml>~/.gem/credentials; chmod 0600 ~/.gem/credentials</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Push your gem to the interwebs.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem push poezix-0.0.1.gem</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Now Ignore All of That and Do This Instead:</h3>
-
-<p>Why?  because it’s faster, easier, and idiot-proof.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle gem your_gem_name</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Oh, look!  It made just about everything you need and it even included hints of what to put where in the files that Bundler created for you.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>poezix
-</span><span class='line'>├── .gitignore
-</span><span class='line'>├── Gemfile
-</span><span class='line'>├── LICENSE.txt
-</span><span class='line'>├── README.md
-</span><span class='line'>├── Rakefile
-</span><span class='line'>├── poezix.gemspec
-</span><span class='line'>└── lib
-</span><span class='line'>    ├── poezix
-</span><span class='line'>    │   └── version.rb
-</span><span class='line'>    └── poezix.rb</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Hey!  Look!  A TODO list!</p>
-
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="lineno"> 1</span> <span class="c1"># coding: utf-8</span>
-<span class="lineno"> 2</span> <span class="n">lib</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;../lib&#39;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span>
-<span class="lineno"> 3</span> <span class="vg">$LOAD_PATH</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span> <span class="k">unless</span> <span class="vg">$LOAD_PATH</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span>
-<span class="lineno"> 4</span> <span class="nb">require</span> <span class="s1">&#39;test_gem/version&#39;</span>
-<span class="lineno"> 5</span> 
-<span class="lineno"> 6</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Specification</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">spec</span><span class="o">|</span>
-<span class="lineno"> 7</span>   <span class="n">spec</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="s2">&quot;test_gem&quot;</span>
-<span class="lineno"> 8</span>   <span class="n">spec</span><span class="o">.</span><span class="n">version</span>       <span class="o">=</span> <span class="no">TestGem</span><span class="o">::</span><span class="no">VERSION</span>
-<span class="lineno"> 9</span>   <span class="n">spec</span><span class="o">.</span><span class="n">authors</span>       <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;user_name&quot;</span><span class="o">]</span>
-<span class="lineno">10</span>   <span class="n">spec</span><span class="o">.</span><span class="n">email</span>         <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;user_email@some_mail.com&quot;</span><span class="o">]</span>
-<span class="lineno">11</span> 
-<span class="lineno">12</span>   <span class="n">spec</span><span class="o">.</span><span class="n">summary</span>       <span class="o">=</span> <span class="sx">%q{TODO: Write a short summary, because Rubygems requires one.}</span>
-<span class="lineno">13</span>   <span class="n">spec</span><span class="o">.</span><span class="n">description</span>   <span class="o">=</span> <span class="sx">%q{TODO: Write a longer description or delete this line.}</span>
-<span class="lineno">14</span>   <span class="n">spec</span><span class="o">.</span><span class="n">homepage</span>      <span class="o">=</span> <span class="s2">&quot;TODO: Put your gem&#39;s website or public repo URL here.&quot;</span>
-<span class="lineno">15</span>   <span class="n">spec</span><span class="o">.</span><span class="n">license</span>       <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
-<span class="lineno">16</span> 
-<span class="lineno">17</span>   <span class="c1"># Prevent pushing this gem to RubyGems.org by setting &#39;allowed_push_host&#39;, or</span>
-<span class="lineno">18</span>   <span class="c1"># delete this section to allow pushing this gem to any host.</span>
-<span class="lineno">19</span>   <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="ss">:metadata</span><span class="p">)</span>
-<span class="lineno">20</span>     <span class="n">spec</span><span class="o">.</span><span class="n">metadata</span><span class="o">[</span><span class="s1">&#39;allowed_push_host&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;TODO: Set to &#39;http://mygemserver.com&#39;&quot;</span>
-<span class="lineno">21</span>   <span class="k">else</span>
-<span class="lineno">22</span>     <span class="k">raise</span> <span class="s2">&quot;RubyGems 2.0 or newer is required to protect against public gem pushes.&quot;</span>
-<span class="lineno">23</span>   <span class="k">end</span>
-<span class="lineno">24</span> 
-<span class="lineno">25</span>   <span class="n">spec</span><span class="o">.</span><span class="n">files</span>         <span class="o">=</span> <span class="sb">`git ls-files -z`</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x0</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reject</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sr">%r{^(test|spec|features)/}</span><span class="p">)</span> <span class="p">}</span>
-<span class="lineno">26</span>   <span class="n">spec</span><span class="o">.</span><span class="n">bindir</span>        <span class="o">=</span> <span class="s2">&quot;exe&quot;</span>
-<span class="lineno">27</span>   <span class="n">spec</span><span class="o">.</span><span class="n">executables</span>   <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">grep</span><span class="p">(</span><span class="sr">%r{^exe/}</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">}</span>
-<span class="lineno">28</span>   <span class="n">spec</span><span class="o">.</span><span class="n">require_paths</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;lib&quot;</span><span class="o">]</span>
-<span class="lineno">29</span> 
-<span class="lineno">30</span>   <span class="n">spec</span><span class="o">.</span><span class="n">add_development_dependency</span> <span class="s2">&quot;bundler&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 1.10&quot;</span>
-<span class="lineno">31</span>   <span class="n">spec</span><span class="o">.</span><span class="n">add_development_dependency</span> <span class="s2">&quot;rake&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 10.0&quot;</span>
-<span class="lineno">32</span>   <span class="n">spec</span><span class="o">.</span><span class="n">add_development_dependency</span> <span class="s2">&quot;rspec&quot;</span>
-<span class="lineno">33</span> <span class="k">end</span></code></pre></div>
-
-
-<p>Now write your ruby, fill out your gem spec and readme, build your gem, write some tests, test your gem, and publish your fancy, new red rock.</p>
-
-<p>Here’s the not all that useful gem that I built for the purposes of this gemsperiment:</p>
-
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="lineno"> 1</span> <span class="nb">require</span> <span class="s2">&quot;poezix/version&quot;</span>
-<span class="lineno"> 2</span> 
-<span class="lineno"> 3</span> <span class="k">class</span> <span class="nc">String</span>
-<span class="lineno"> 4</span>     <span class="k">def</span> <span class="nf">upon_a_midnight_dreary</span>
-<span class="lineno"> 5</span>       <span class="k">if</span> <span class="nb">self</span> <span class="o">==</span> <span class="s2">&quot;once&quot;</span>
-<span class="lineno"> 6</span>         <span class="mi">1</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-<span class="lineno"> 7</span>           <span class="k">yield</span>
-<span class="lineno"> 8</span>         <span class="k">end</span>        
-<span class="lineno"> 9</span>       <span class="k">elsif</span> <span class="nb">self</span> <span class="o">==</span> <span class="s2">&quot;twice&quot;</span>
-<span class="lineno">10</span>         <span class="mi">2</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-<span class="lineno">11</span>           <span class="k">yield</span>
-<span class="lineno">12</span>         <span class="k">end</span>
-<span class="lineno">13</span>       <span class="k">elsif</span> <span class="nb">self</span> <span class="o">==</span> <span class="s2">&quot;thrice&quot;</span>
-<span class="lineno">14</span>         <span class="mi">3</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-<span class="lineno">15</span>           <span class="k">yield</span>
-<span class="lineno">16</span>         <span class="k">end</span>
-<span class="lineno">17</span>       <span class="k">else</span>
-<span class="lineno">18</span>         <span class="k">raise</span> <span class="s2">&quot;Mayhaps an Integer you seek?&quot;</span>
-<span class="lineno">19</span>       <span class="k">end</span>
-<span class="lineno">20</span>     <span class="k">end</span>
-<span class="lineno">21</span> <span class="k">end</span>
-<span class="lineno">22</span> 
-<span class="lineno">23</span> 
-<span class="lineno">24</span> <span class="k">class</span> <span class="nc">Integer</span>
-<span class="lineno">25</span>   <span class="k">def</span> <span class="nf">upon_a_midnight_dreary</span>
-<span class="lineno">26</span>     <span class="nb">self</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-<span class="lineno">27</span>       <span class="k">yield</span>
-<span class="lineno">28</span>     <span class="k">end</span>
-<span class="lineno">29</span>   <span class="k">end</span>
-<span class="lineno">30</span> <span class="k">end</span>
-<span class="lineno">31</span> 
-<span class="lineno">32</span> 
-<span class="lineno">33</span> 
-<span class="lineno">34</span> <span class="k">def</span> <span class="nf">quoth</span><span class="p">(</span><span class="n">phrase</span> <span class="o">=</span> <span class="s2">&quot;Nevermore&quot;</span><span class="p">)</span>
-<span class="lineno">35</span>   <span class="nb">puts</span> <span class="n">phrase</span><span class="o">.</span><span class="n">upcase</span> <span class="o">+</span> <span class="s2">&quot;!!!&quot;</span>
-<span class="lineno">36</span> <span class="k">end</span>
-<span class="lineno">37</span> 
-<span class="lineno">38</span> 
-<span class="lineno">39</span> <span class="c1">#Generates filler content from a text randomly selected from one of 42 poems/short stories.</span>
-<span class="lineno">40</span> <span class="c1">#Takes an arguement to determine the number of line returned.</span>
-<span class="lineno">41</span> 
-<span class="lineno">42</span> <span class="k">def</span> <span class="nf">poesem_ipsum</span><span class="p">(</span><span class="n">number_of_lines</span> <span class="o">=</span> <span class="s2">&quot;full&quot;</span><span class="p">)</span>
-<span class="lineno">43</span>   <span class="n">all_texts</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">__FILE__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/texts/*.txt&quot;</span><span class="o">]</span>
-<span class="lineno">44</span>   <span class="n">number_of_texts</span> <span class="o">=</span> <span class="n">all_texts</span><span class="o">.</span><span class="n">size</span>
-<span class="lineno">45</span>   <span class="n">selection</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.number_of_texts</span><span class="p">)</span>
-<span class="lineno">46</span> 
-<span class="lineno">47</span>   <span class="n">text</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">all_texts</span><span class="o">[</span><span class="n">selection</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span> <span class="c1">#An Array</span>
-<span class="lineno">48</span> 
-<span class="lineno">49</span>   <span class="k">if</span> <span class="n">number_of_lines</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span>
-<span class="lineno">50</span>     <span class="n">number_of_lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="lineno">51</span>   <span class="k">end</span>
-<span class="lineno">52</span> 
-<span class="lineno">53</span>   <span class="n">text</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.number_of_lines</span><span class="o">].</span><span class="n">join</span>
-<span class="lineno">54</span> <span class="k">end</span></code></pre></div>
-
-
-<p>Sources:</p>
-
-<p>[Engineering Lunch Series] Step-by-Step Guide to Building Your First Ruby Gem
-<a href="https://quickleft.com/blog/engineering-lunch-series-step-by-step-guide-to-building-your-first-ruby-gem/">https://quickleft.com/blog/engineering-lunch-series-step-by-step-guide-to-building-your-first-ruby-gem/</a></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/27/how-to-build-a-valueless-gem/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1119,56 +349,12 @@ No!  Why would you determine primes using a string like some kind of asshole?  C
 
 <p>I believed those professors and tour guides because 1) I figured that they knew what they were talking about, and 2) I’d seen it in books.  Everything in books is true, right? #bible.  Turns out tour_guides.liar_liar_pants_on_fire? returns true.</p>
 
-<p>There is a YouTube channel called ‘Computerphile’ that puts out videos digging down into some of the minutiae of the history and inner workings of those magical thinking boxes that we all carry around.  Ever wonder about the discrete cosine transformation used to encode jpeg images or the significance of the Altair 8800? No?  Well if you did you could hear all about it from experts in the fields.  It, along with it’s sister channel ‘Numberphile’, are worth a look.</p>
-
-<p>Anyway, back to the issue at hand… I ran across one of Computerphile’s vids this past Monday.  The topic: Colossus, the world’s first (at least partially) programmable electronic digital computer.  The prototype, Colossus Mk 1 was operational in December of 1943 and put into service February 5, 1944, preceding ENIAC (completed in November of 1945) by nearly two years.  Bonus points for having a way better name.</p>
-
-<iframe width="760" height="488" src="https://www.youtube.com/embed/9HH-asvLAj4" frameborder="0" allowfullscreen></iframe>
-
-
-<p>The Colossus was designed and built by engineer Tommy Flowers, assisted by William Chandler, with Sidney Broadhurst working on the auxiliary electromechanical parts at the Government Code and Cypher School (GC&amp;CS) in Bletchley Park in order to break the cryptography of the Lorenz SZ42 cipher machine used to encrypt messages transmitted by the German High Command and Army Commands.  Though the better known Enigma was more common (due to its greater portability), it was used more in the transmission of tactical information, while the Lorenz, a far more complex cipher, was used to securely transmit information of a more strategic nature; ‘securely’ at least until Colossus came along.</p>
-
-<p>Colossus was the first example of program-controlled logic, parallel processing, variable programming, hardware interrupts, optical reading of punched paper tape, and shift registers, all concepts that would become critical in the future development of computing.</p>
-
-<p>It is worth taking a moment to note how much more complex the challenge was facing Colossus in comparison to the challenge facing Turing’s ‘Victory' (not ‘Christoper’, sorry Cumberbatch) electromechanical computer.</p>
-
-<p>Enigma:
-3 rotors (Army and Air Force) or 4 rotors (Navy) with 26 settings each.  The three rotor version could be configured in:
-158,962,555,217,826,360,000 different ways.  Thats 159 million million million.</p>
-
-<p>Lorenz:
-12 Rotors, each with a different number of possible settings.</p>
-
-<p>Rotor Number => Possible settings.</p>
-
-<p>{1=> 43, 2=> 47, 3=> 51, 4=> 53, 5=> 59, 6=> 37, 7=> 61, 8=> 41, 9=> 31, 10=> 29, 11=> 26, 12=> 23}
-which combined to form:
-104, 970,795,887,142, 501,519,944,408, 859,713,937,438, 238,568,341,584, 154,526,205,632, 598,745,732,639, 647,278,021,173, 163,831,071,764, 896,225,159,592, 365,198,842,461, 226,688,733,330, 753,486,243,770, 471,723,522,422, 795,262,754,816 different possible settings.</p>
-
-<p>100 million million million million million million million million million million million million million million million million million million million million million million million million million million million million. POSSIBLE. SETTING.</p>
-
-<p>In scientific notation thats written as 1.04 x 10<sup>shit-ton</sup>.</p>
-
-<p>And to compare the two, the Lorenz could be set to: 660,349, 198,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000, 000,000,000,000 TIMES more combinations than the Enigma.</p>
-
-<p>660,349 million million million million million million million million million million million million million million million million million million million million million million million million.  TIMES. MORE.</p>
-
-<p> Yeeeeesh.</p>
-
-<p>So why haven’t we heard of Colossus?  Well, it was highly classified through the late 1970’s, long after ENIAC had been revealed to the public in 1946 and hailed as the first electronic ‘Giant Brain’.  It’s hard to unseat a 30 year-old reputation.  Furthermore, Churchill ordered all but two of the 11 machines destroyed shortly after V-E Day in 1945.  The remaining machines were used for training and research purposes before being scrapped a number of years later.</p>
-
-<p>As far as I can tell the only reason one might prefer ENIAC over Colossus is that it was the first example of a Turing complete machine, whatever that mean.  You’ll have to look that one up for yourself; it went a bit over my head.  Then again Professor Benjamin Wells of the Departments of Computer Science and Mathematics, University of San Francisco, has shown that a Universal Turing Machine could run on ten Colossus computers and argues that this means that Colossus satisfies the definition of Turing completeness. Soon, there’s that?</p>
-
-<p>Sources-
-This isn’t a scholarly work so I’m not going to go back and cite anything, but here are a few places that were helpful:</p>
-
-<p><a href="http://billtuttememorial.org.uk/codebreaking/the-lorenz/">http://billtuttememorial.org.uk/codebreaking/the-lorenz/</a>
-<a href="https://www.youtube.com/watch?v=9HH-asvLAj4">https://www.youtube.com/watch?v=9HH-asvLAj4</a>
-<a href="http://www.wired.com/2007/09/dead-media-be-1-17/">http://www.wired.com/2007/09/dead-media-be-1-17/</a>
-<a href="http://history-computer.com/ModernComputer/Electronic/Colossus.html">http://history-computer.com/ModernComputer/Electronic/Colossus.html</a>
-<a href="http://cryptomuseum.com/crypto/colossus/index.htm">http://cryptomuseum.com/crypto/colossus/index.htm</a></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/16/eniac-wasnt-first-dot-dot-dot/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1205,248 +391,12 @@ This isn’t a scholarly work so I’m not going to go back and cite anything, b
 
 <p>I thought that I understood constants.  Unchanging. Immutable.  Then Ruby went and fucked it up.</p>
 
-<p>My understanding of constants in Ruby was that they are represented by a capitalized bareword (often all upper case) which, once defined, would cause Ruby to pitch a fit if you were to try to reassign its value.  Makes sense, right?  So when I saw this I was a bit confused:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Shoe
-</span><span class='line'>  BRANDS = []
-</span><span class='line'>
-</span><span class='line'>  def initialize(brand)
-</span><span class='line'>    @brand = brand
-</span><span class='line'>    if BRANDS.include?(@brand) == false
-</span><span class='line'>    BRANDS &lt;&lt; @brand
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Wait.. whaaaaaa????</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>BRANDS &lt;&lt; @brand</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Aren&rsquo;t we changing what BRAND represents?
-Yes and no.
-We are NOT changing the object to which the bareword &ldquo;BRANDS&rdquo; points.
-We ARE changing the contents of that array, or what I formerly thought of as the value for &ldquo;BRANDS&rdquo;.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>BRANDS = []
-</span><span class='line'>BRANDS.object_id #=&gt; 70132206506080
-</span><span class='line'>BRANDS &lt;&lt; "LA Gear"
-</span><span class='line'>BRANDS &lt;&lt; "FILA"
-</span><span class='line'>BRANDS #=&gt; ["LA Gear", "FILA"]
-</span><span class='line'>BRANDS.object_id #=&gt; 70132206506080</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But, wait!  There&rsquo;s more!</p>
-
-<p>So, while the value of PI might be the same in your home as it is in Intercourse, Pennsylvania,  Fucking, Austria,  and Wetwang, Yorkshire UK (all real places, btw), a constant may not be the same everywhere in your code.  Let&rsquo;s try this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["mmmmmm","piiiiiiiieeeeeee"]
-</span><span class='line'>
-</span><span class='line'>class TastyStuff
-</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
-</span><span class='line'>
-</span><span class='line'>  def initialize(name)
-</span><span class='line'>    if PIE.include?(name)
-</span><span class='line'>      puts "Nom!"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
-</span><span class='line'>
-</span><span class='line'>PIE #=&gt; ["mmmmmm","piiiiiiiieeeeeee"]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So now we have two &ldquo;PIE"s?
-Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["mmmmmm","piiiiiiiieeeeeee"]
-</span><span class='line'>
-</span><span class='line'>class TastyStuff
-</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
-</span><span class='line'>
-</span><span class='line'>  def initialize(name)
-</span><span class='line'>    if PIE.include?(name)
-</span><span class='line'>      puts "Nom!"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
-</span><span class='line'>
-</span><span class='line'>PIE #=&gt; ["mmmmmm","piiiiiiiieeeeeee"]
-</span><span class='line'>TastyStuff::PIE #=&gt; ["Pecan", "Apple", "Pumpkin"]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>What happens if we get rid of the &ldquo;PIE&rdquo; inside the class?</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PIE = ["Pecan", "Apple", "Pumpkin"]
-</span><span class='line'>
-</span><span class='line'>class TastyStuff
-</span><span class='line'>  def initialize(name)
-</span><span class='line'>    if PIE.include?(name)
-</span><span class='line'>      puts "Nom!"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
-</span><span class='line'>
-</span><span class='line'>PIE #=&gt; ["Pecan", "Apple", "Pumpkin"]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But if we reverse it&hellip;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class TastyStuff
-</span><span class='line'>  PIE = ["Pecan", "Apple", "Pumpkin"]
-</span><span class='line'>
-</span><span class='line'>  def initialize(name)
-</span><span class='line'>    if PIE.include?(name)
-</span><span class='line'>      puts "Nom!"
-</span><span class='line'>    end
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>my_treat = TastyStuff.new("Pecan") #=&gt; "Nom!"
-</span><span class='line'>
-</span><span class='line'>PIE #=&gt; uninitialized constant PIE (NameError)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Sooooooo&hellip; now we can&rsquo;t call &ldquo;PIE&rdquo; from outside of the class?   It only works from within the class?  I guess we could call it a &lsquo;Class Constant&rsquo;?  Yeah, let&rsquo;s call it a Class Constant because, well, that&rsquo;s what it&rsquo;s called.</p>
-
-<hr />
-
-<p>Let&rsquo;s summarize:</p>
-
-<ul>
-<li>Constants can only be set to point to an object once.</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
-</span><span class='line'>LYRICS = ["Hey Hey Hey, Goodbye"]
-</span><span class='line'>#=&gt;2: warning: already initialized constant LYRICS
-</span><span class='line'>#=&gt;1: warning: previous definition of LYRICS was here</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>The object to which a constant points CAN be changed.</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
-</span><span class='line'>LYRICS &lt;&lt; "Hey Hey Hey, Goodbye"
-</span><span class='line'>#=&gt; ["Nah Nah Nah Nah" , "Hey Hey Hey, Goodbye"]</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>Constants have a scope / are namespaced.</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LYRICS = ["Nah Nah Nah Nah"]
-</span><span class='line'>
-</span><span class='line'>class Tunes
-</span><span class='line'>  LYRICS = ["Hey Hey Hey, Goodbye"]
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>LYRICS #=&gt; ["Nah Nah Nah Nah"]
-</span><span class='line'>Tunes::LYRICS #=&gt; ["Hey Hey Hey, Goodbye"]</span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/04/my-first-post-on-octopress/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1465,6 +415,10 @@ Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/23/everyday-rails-testing-with-rspec/">Everyday Rails: Testing With RSpec</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/13/two-egg-problem/">If You Want to Ace the Interview, You've Got to Break a Few Eggs: The Two Egg Problem</a>
       </li>
     
@@ -1478,10 +432,6 @@ Hello Namespacing!  How&rsquo;re the wife and kids?!</p>
     
       <li class="post">
         <a href="/blog/2015/07/25/3dify-yourself-three-dot-js/">3Dify Yourself: Three.js</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/08/primes-with-regex/">Primes With Regex</a>
       </li>
     
   </ul>
