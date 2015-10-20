@@ -9,8 +9,7 @@
   <meta name="author" content="Mason Jennings">
 
   
-  <meta name="description" content="What&rsquo;s a pirate&rsquo;s favorite testing framework?
-ArrrrrrrrSpec! This past week I&rsquo;ve been working through Aaron Sumner&rsquo;s &ldquo; &hellip;">
+  <meta name="description" content="The Problem The Enumerable mixin&rsquo;s #map/#collect methods are fantastic for mutating the values in an array but have an inconsistent behavior &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,63 @@ ArrrrrrrrSpec! This past week I&rsquo;ve been working through Aaron Sumner&rsquo
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/10/19/hash-map/">A New Hash#map</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-19T11:57:32-04:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:57 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/NY_Map.jpg" width="400" alt="https://www.etsy.com/shop/bananastrudel?ref=l2-shopheader-name"></p>
+
+<h3>The Problem</h3>
+
+<p>The Enumerable mixin&rsquo;s <a href="http://ruby-doc.org/core-2.2.3/Enumerable.html#method-i-map">#map</a>/<a href="http://ruby-doc.org/core-2.2.3/Enumerable.html#method-i-collect">#collect</a> methods are fantastic for mutating the values in an array but have an inconsistent behavior when applied to a hash.  So since using #map/#collect on an array gives you this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">}</span>
+</span><span class='line'><span class="c1">#=&gt; [1,4,9]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>you might expect the hash to behave something like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">{</span><span class="ss">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">c</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="ss">k</span><span class="p">:</span> <span class="n">v</span><span class="o">*</span><span class="n">v</span><span class="p">}</span>
+</span><span class='line'><span class="c1">#=&gt; {a: 1, b: 4, c: 9}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>but instead you get:
+<code>SyntaxError: (irb):1: syntax error, unexpected ':', expecting '}'</code></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/10/19/hash-map/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -415,6 +471,10 @@ ArrrrrrrrSpec!</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/19/hash-map/">A New Hash#map</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/23/everyday-rails-testing-with-rspec/">Everyday Rails: Testing With RSpec</a>
       </li>
     
@@ -428,10 +488,6 @@ ArrrrrrrrSpec!</p>
     
       <li class="post">
         <a href="/blog/2015/08/11/i-didnt-write-a-blog-post-for-today-so-here-are-some-pictures-of-animals/">I Didn't Write a Blog Post for Today So Here Are Some Pictures of Animals</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/25/3dify-yourself-three-dot-js/">3Dify Yourself: Three.js</a>
       </li>
     
   </ul>
