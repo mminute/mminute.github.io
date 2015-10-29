@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Keyword Arguments - A PlanarFe Adventure</title>
+  <meta name="author" content="Mason Jennings">
+
+  
+  <meta name="description" content="During a morning standup (less fun than actual standup) at work someone mentioned that a method was a good candidate for a refactor using Keyword &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mminute.github.io/blog/2015/10/28/keyword-arguements/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A PlanarFe Adventure" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A PlanarFe Adventure</a></h1>
+  
+    <h2>LearnLoveCode</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="mminute.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Keyword Arguments</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-28T16:49:10-04:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:49 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="/images/argument.jpg" width="400"></p>
+
+<p>During a morning standup (less fun than <a href="https://www.youtube.com/watch?v=P0SICqoBevs">actual standup</a>) at work someone mentioned that a method was a good candidate for a refactor using Keyword Arguments.  So I went back to my desk, googled it, and my newb brain said &lsquo;Why?&rsquo;.</p>
+
+<!--more-->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">some_method</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">arg3</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">arg1</span> <span class="o">+</span> <span class="n">arg2</span> <span class="o">+</span> <span class="n">arg3</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">some_method</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">)</span> <span class="c1">#=&gt; &quot;abc&quot;</span>
+</span><span class='line'><span class="n">some_method</span> <span class="c1">#=&gt; ArgumentError: wrong number of arguments (0 for 3)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">method_with_keyword_args</span><span class="p">(</span><span class="ss">arg1</span><span class="p">:,</span> <span class="ss">arg2</span><span class="p">:,</span> <span class="ss">arg3</span><span class="p">:)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">arg1</span> <span class="o">+</span> <span class="n">arg2</span> <span class="o">+</span> <span class="n">arg3</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">method_with_keyword_args</span><span class="p">(</span><span class="ss">arg1</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="ss">arg2</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="ss">arg3</span><span class="p">:</span> <span class="s2">&quot;c&quot;</span><span class="p">)</span> <span class="c1">#=&gt; &quot;abc&quot;</span>
+</span><span class='line'><span class="n">method_with_keyword_args</span> <span class="c1">#=&gt;ArgumentError: missing keywords: arg1, arg2, arg3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So above we&rsquo;re looking at a method defined with your typical (positional) arguments and another method using <em>required</em> keyword arguments (defined by the colon following the argument name).  It just looked like more typing to me.  Maybe with a better error, so ok, there&rsquo;s a point for that I guess.</p>
+
+<p>Default arguments are defined just as you might expect:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">keyword_args</span><span class="p">(</span><span class="ss">arg1</span><span class="p">:</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="ss">arg2</span><span class="p">:</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="ss">arg3</span><span class="p">:</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">arg1</span><span class="o">+</span><span class="n">arg2</span><span class="o">+</span><span class="n">arg3</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">keyword_args</span> <span class="c1">#=&gt; &quot;abc&quot;</span>
+</span><span class='line'><span class="n">keyword_args</span><span class="p">(</span><span class="ss">arg1</span><span class="p">:</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="ss">arg2</span><span class="p">:</span><span class="s2">&quot;World&quot;</span><span class="p">,</span> <span class="ss">arg3</span><span class="p">:</span><span class="s2">&quot;!&quot;</span><span class="p">)</span> <span class="c1">#=&gt; &quot;HelloWorld!&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">positional_args</span><span class="p">(</span><span class="n">arg1</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">arg2</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">arg3</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">arg1</span><span class="o">+</span><span class="n">arg2</span><span class="o">+</span><span class="n">arg3</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But still, is there really much of an advantage?  Readability is one way that keyword arguments might be a good way to go rather than positional arguments.  If you were to encounter a method call in your codebase the keywords give you a clue as to what the arguments mean and maybe even how the argument are used within the method.  Positional arguments would require you to go look up the method definition.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># calling a method with positional arguments</span>
+</span><span class='line'><span class="n">electrical_power</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#=&gt; 72</span>
+</span><span class='line'><span class="c1"># calling a method with keyword arguments</span>
+</span><span class='line'><span class="n">electrical_power</span><span class="p">(</span><span class="ss">volts</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">ohms</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">#=&gt; 72</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Beyond that, since in your are referencing the variable name contained in your method from your method call and assigning it a value for that method call, the order of the arguments does not matter.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># calling a method with positional arguments</span>
+</span><span class='line'><span class="n">electrical_power</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#=&gt; 72</span>
+</span><span class='line'><span class="n">electrical_power</span><span class="p">(</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span> <span class="c1">#=&gt; 0.3333333333333333</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># calling a method with keyword arguments</span>
+</span><span class='line'><span class="n">electrical_power</span><span class="p">(</span><span class="ss">volts</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">ohms</span><span class="p">:</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#=&gt; 72</span>
+</span><span class='line'><span class="n">electrical_power</span><span class="p">(</span><span class="ss">ohms</span><span class="p">:</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">volts</span><span class="p">:</span> <span class="mi">12</span><span class="p">)</span> <span class="c1">#=&gt; 72</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To do something similar without keyword arguments would require passing a hash as an argument:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">electrical_power</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">inputs</span><span class="o">[</span><span class="ss">:volt</span><span class="o">]**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">inputs</span><span class="o">[</span><span class="ss">:ohms</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">electrical_power</span><span class="p">({</span><span class="ss">volts</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span> <span class="ss">ohms</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span> <span class="c1">#=&gt; 72</span>
+</span><span class='line'><span class="n">electrical_power</span> <span class="c1">#=&gt; ArgumentError: wrong number of arguments (0 for 1)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Giving that method default arguments might look something like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">electrical_power</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">{</span><span class="ss">volts</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="ss">ohms</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+</span><span class='line'>  <span class="n">inputs</span><span class="o">[</span><span class="ss">:volts</span><span class="o">]**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">inputs</span><span class="o">[</span><span class="ss">:ohms</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># OR</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">electrical_power</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">{})</span>
+</span><span class='line'>  <span class="n">inputs</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="ss">:volts</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">inputs</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="ss">:ohms</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">electrical_power</span><span class="p">({</span><span class="ss">ohms</span><span class="p">:</span><span class="mi">4</span> <span class="p">,</span><span class="ss">volts</span><span class="p">:</span><span class="mi">8</span><span class="p">})</span> <span class="c1">#=&gt;16</span>
+</span><span class='line'><span class="n">electrical_power</span> <span class="c1">#=&gt; 72</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So why not just use keyword arguments at that point and skip the curly braces, square brackets, and <a href="http://www.slate.com/content/dam/slate/blogs/lexicon_valley/2014/05/01/mean_girls_slang_fetch_10_years_later_why_it_didn_t_catch_on_according_to/stop_trying_to_make_fetch_happen_1.png.CROP.promo-mediumlarge.png">&lsquo;.fetch&rsquo;-es</a>?</p>
+
+<p>What really sold me is this:</p>
+
+<blockquote><p>When one Ruby method has to know the correct order of another method’s positional arguments, we end up with <a href="https://en.wikipedia.org/wiki/Connascence_(computer_programming)">connascence of position</a>.</p>
+
+<p>If we decide to change the order of the parameters to mysterious_total, we must change all callers of that method accordingly. Not only that, but our mental model of how to use this method must change as well, which isn’t as simple as a find/replace.</p></blockquote>
+
+<p>This statement gave me two thoughts:</p>
+
+<p>&#9;1. I haven&rsquo;t been programming for long, but I&rsquo;ve learned enough to know that it&rsquo;s easier to build a clean interface once than to modify every call to a method when its implementation changes.  <strong>When</strong>, not if.</p>
+
+<p>&#9;2. More than that, if you are calling a method from another method or interacting with another object, with positional arguments that method or object now needs to know something about the order of arguments passed to the original method.  It&rsquo;s like it gets a little peak into the internal of the first method which doesn&rsquo;t feel very <a href="https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)">encapsulated</a> to me.</p>
+
+<p>Happy Halloween!!!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">spooky_method</span><span class="p">(</span><span class="ss">who</span><span class="p">:,</span><span class="ss">what</span><span class="p">:,</span><span class="ss">where</span><span class="p">:)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">who</span><span class="si">}</span><span class="s2"> did the </span><span class="si">#{</span><span class="n">what</span><span class="si">}</span><span class="s2">!&quot;</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;He did the monster </span><span class="si">#{</span><span class="n">what</span><span class="si">}</span><span class="s2">.&quot;</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;It was a smash.&quot;</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;It was a </span><span class="si">#{</span><span class="n">where</span><span class="si">}</span><span class="s2"> smash.&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">spooky_method</span><span class="p">(</span><span class="ss">who</span><span class="p">:</span> <span class="s2">&quot;Frankenstein&quot;</span><span class="p">,</span> <span class="ss">what</span><span class="p">:</span> <span class="s2">&quot;Mash&quot;</span><span class="p">,</span> <span class="ss">where</span><span class="p">:</span><span class="s2">&quot;Graveyard&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1">#=&gt; &quot;Frankenstein did the Mash!&quot;</span>
+</span><span class='line'>  <span class="c1">#=&gt; &quot;He did the monster Mash.&quot;</span>
+</span><span class='line'>  <span class="c1">#=&gt; &quot;It was a smash.&quot;</span>
+</span><span class='line'>  <span class="c1">#=&gt; &quot;It was a Graveyard smash.&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/MonsterMash-Imgur.jpg" width="400"></p>
+
+<h2>Sources:</h2>
+
+<p><a href="https://robots.thoughtbot.com/ruby-2-keyword-arguments">
+&ldquo;Ruby 2 Keyword Arguments&rdquo; - Ian C. Anderson (Thoughtbot)
+</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mason Jennings</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-10-28T16:49:10-04:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:49 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://mminute.github.io/blog/2015/10/28/keyword-arguements/" data-via="" data-counturl="http://mminute.github.io/blog/2015/10/28/keyword-arguements/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/10/19/hash-map/" title="Previous Post: A New Hash#map">&laquo; A New Hash#map</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/28/keyword-arguements/">Keyword Arguments</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/19/hash-map/">A New Hash#map</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/23/everyday-rails-testing-with-rspec/">Everyday Rails: Testing With RSpec</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/13/two-egg-problem/">If You Want to Ace the Interview, You've Got to Break a Few Eggs: The Two Egg Problem</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/08/24/finite-state-machines/"></a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mason Jennings -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
