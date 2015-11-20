@@ -4,7 +4,7 @@
   <title><![CDATA[A PlanarFe Adventure]]></title>
   <link href="http://mminute.github.io/atom.xml" rel="self"/>
   <link href="http://mminute.github.io/"/>
-  <updated>2015-10-28T23:24:48-04:00</updated>
+  <updated>2015-11-19T21:03:31-05:00</updated>
   <id>http://mminute.github.io/</id>
   <author>
     <name><![CDATA[Mason Jennings]]></name>
@@ -12,6 +12,535 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Tap, Inject, and Each_With_Object]]></title>
+    <link href="http://mminute.github.io/blog/2015/11/10/tap/"/>
+    <updated>2015-11-10T11:54:16-05:00</updated>
+    <id>http://mminute.github.io/blog/2015/11/10/tap</id>
+    <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/beerTaps.jpg" width="600" alt="http://live2eat.typepad.com/.a/6a014e8968623c970d017d42a40c16970c-pi"></p>
+
+<p>I realized the other day that, while I&rsquo;ve been using Object#tap, Enumerator#each#with_object, and Enumerable#each_with_object for some time now, I wasn&rsquo;t completely clear on the difference between these methods or how best to employ them.  Mostly I just threw in Object#tap wherever I saw sandwich code and called it a day.</p>
+
+<p>Time for a&hellip;</p>
+
+<p><img src="http://mminute.github.io/images/DeepDive.jpg" width="600" alt="http://40.media.tumblr.com/33dded80b572fc3f9733ba5616b7e6ed/tumblr_mv4yonGTMV1rh0tlxo2_1280.jpg"></p>
+
+<!--more-->
+
+
+<p>A good place to start is <a href="http://ruby-doc.org/core-2.2.3/">Ruby Docs</a> for the method definitions:</p>
+
+<blockquote>
+  <a href="#tap">Object#tap</a> - <br>
+    Yields self to the block, and then returns self. The primary purpose of this method is to “tap into” a method chain, in order to perform operations on intermediate results within the chain.
+  <br>
+  <br>
+  <a href="#each_with_object">Enumerable#each_with_object</a> - <br>
+    Iterates the given block for each element with an arbitrary object given, and returns the initially given object. <br>
+
+    If no block is given, returns an enumerator.
+  <br>
+  <br>
+  <a href="#inject">Enumerable#inject</a> - <br>
+    Combines all elements of enum by applying a binary operation, specified by a block or a symbol that names a method or operator. <br>
+    <br>
+    If you specify a block, then for each element in enum the block is passed an accumulator value (memo) and the element. If you specify a symbol instead, then each element in the collection will be passed to the named method of memo. In either case, the result becomes the new value for memo. At the end of the iteration, the final value of memo is the return value for the method. <br>
+    <br>
+    If you do not explicitly specify an initial value for memo, then the first element of collection is used as the initial value of memo.
+</blockquote>
+
+
+
+
+<div id="tap"></div>
+
+
+<h2>Object#tap</h2>
+
+<p>I&rsquo;ll start with this one, mostly because it&rsquo;s the one that I have thrown around the most with the least amount of thought.  So far I&rsquo;ve mostly just used it for refactors like this: (cue extremely contrived example&hellip;)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">class</span> <span class="nc">Human</span>
+</span><span class='line'>    <span class="kp">attr_accessor</span> <span class="ss">:age</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">can_drive?</span>
+</span><span class='line'>      <span class="n">age</span> <span class="o">&gt;=</span> <span class="mi">16</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Sandwich code</span>
+</span><span class='line'>  <span class="n">mason</span> <span class="o">=</span> <span class="no">Human</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="n">mason</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">mason</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># tapped</span>
+</span><span class='line'>  <span class="n">mason</span> <span class="o">=</span> <span class="no">Human</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">person</span><span class="o">|</span> <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="p">)</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On a personal note, I&rsquo;m feeling conflicted about this method lately.  I like that it eliminates the need to explicitly return the &lsquo;Human&rsquo; object.  I like it aesthetically, it reads cleanly to my eye, but sometimes it feels a bit like using it just to use it.  Maybe even a bit trivial.  Not everyone instantly recognizes it and it actually seems to obfuscate your intended return value a bit.  Anyway&hellip;</p>
+
+<p>While the above implementation certainly works, reading the documentation it isn&rsquo;t quite the use for which the method was designed.</p>
+
+<blockquote>
+"The primary purpose of this method is to “tap into” a method chain."
+</blockquote>
+
+
+<p>It may clean up the code but maybe the <code>#tap</code> method is better reserved for cases where returning the origional object provides a bit more function:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">mason</span> <span class="o">=</span> <span class="no">Human</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="n">mason</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">mason</span><span class="o">.</span><span class="n">can_drive?</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># or</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">mason</span> <span class="o">=</span> <span class="no">Human</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">person</span><span class="o">|</span> <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">100</span><span class="p">)</span> <span class="p">}</span><span class="o">.</span><span class="n">can_drive?</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here the return value of <code>person.age = rand(1..100)</code> is an integer and <code>#can_drive?</code> is a method on an instance of the class <code>Human</code>. Without <code>#tap</code> you would not be able to chain these methods together.  This feels like a better use case to me; the <code>#tap</code> method serves a more significant purpose, allowing you to assign a variable name, an age, and call an instance method on a class all in one shot.</p>
+
+<div id="each_with_object"></div>
+
+
+<h2>Enumerable#each_with_object</h2>
+
+<p>So this one is a bit different but kind of in the same vein. It&rsquo;s in the Enumerable module so we know that <code>#each_with_object</code> is called on some kind of collection, like an array or a hash, and iterates through the items in the collection, just like the plain-old <code>#each</code> method.  What puts <code>#each_with_object</code> in the family of <code>#tap</code> is the <code>...with_object</code> bit. It allows us to pass in an arbitrary object and return that object from the method. Where <code>#tap</code> is called on the object you wish to return, <code>#each_with_object</code> takes the return object as an arguement.  For me the inportance is the concept.  <strong>It couples the iteration and the return.</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">my_strings</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;destiny&#39;</span><span class="p">,</span> <span class="s1">&#39;how&#39;</span><span class="p">,</span> <span class="s1">&#39;are&#39;</span><span class="p">,</span> <span class="s1">&#39;the&#39;</span><span class="p">,</span> <span class="s1">&#39;wife&#39;</span><span class="p">,</span> <span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="s1">&#39;kids&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># with tap</span>
+</span><span class='line'>  <span class="o">[].</span><span class="n">tap</span> <span class="p">{</span> <span class="o">|</span><span class="n">collector</span><span class="o">|</span> <span class="n">my_strings</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span> <span class="n">collector</span> <span class="o">&lt;&lt;</span> <span class="n">word</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>  <span class="c1"># or for better readability</span>
+</span><span class='line'>  <span class="o">[].</span><span class="n">tap</span> <span class="k">do</span> <span class="o">|</span><span class="n">collector</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">my_strings</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">word</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">collector</span> <span class="o">&lt;&lt;</span> <span class="n">word</span><span class="o">.</span><span class="n">upcase</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># with each_with_object</span>
+</span><span class='line'>  <span class="n">my_strings</span><span class="o">.</span><span class="n">each_with_object</span><span class="p">(</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">word</span><span class="p">,</span> <span class="n">collector</span><span class="o">|</span> <span class="n">collector</span> <span class="o">&lt;&lt;</span> <span class="n">word</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So, rather than iterating through the collection with <code>#tap</code>&rsquo;s block we implicitly iterate through the collection.  I&rsquo;ve seen <code>#tap</code> used this way but to my eye <code>#each_with_object</code> more clearly and succinctly communicates what you seek to accomplish.  If <a href="#performance">performance is critical</a>, go ahead and use <code>#tap</code> this way, otherwise maybe <code>#each_with_object</code> might help out those developers coming behind you.</p>
+
+<p>Alternately <code>Enumberable.each.with_object</code> functions exactly the same as <code>#each_with_object</code> and might even be more clear in its' link with iterating over a collection.</p>
+
+<div id="inject"></div>
+
+
+<h2>Enumerable#inject aka Enumerable#Reduce</h2>
+
+<p>This is the odd-ball of the group.  The idea is that you have an object (noted as the <code>memo_object</code> in the documentation) to which some sort of changes are applied based on the objects over which you are iterating.  The simplest examples is addition:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="o">].</span><span class="n">inject</span> <span class="p">{</span> <span class="o">|</span><span class="n">memo_object</span><span class="p">,</span> <span class="n">number</span> <span class="o">|</span> <span class="n">memo_object</span> <span class="o">=</span> <span class="n">memo_object</span> <span class="o">+</span> <span class="n">number</span> <span class="p">}</span>
+</span><span class='line'>  <span class="c1"># =&gt; 15</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>#inject</code> comes in two flavors, taking a symbol or a block, and each of those flavors can also optionally take an initial value as an arguement.  If no initial value is passed, the first object in the collection becomes the initial value by default.</p>
+
+<h3>Passed a symbol:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="ss">:+</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># =&gt; 20</span>
+</span><span class='line'>  <span class="c1"># or equivalently -&gt; [2,4,6,8].reduce(:+)</span>
+</span><span class='line'>  <span class="c1"># Takes 2 as the initial value,</span>
+</span><span class='line'>  <span class="c1"># add 4 to it, returns 6 to the next</span>
+</span><span class='line'>  <span class="c1"># iteration. Takes the 6 returned to the</span>
+</span><span class='line'>  <span class="c1"># second iteration, adds 6 to it, returns</span>
+</span><span class='line'>  <span class="c1"># 12 to the next iteration...</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Passed a symbol and an initial value</span>
+</span><span class='line'>  <span class="o">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="ss">:+</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># =&gt; 30</span>
+</span><span class='line'>  <span class="c1"># Takes 10 as the initial value,</span>
+</span><span class='line'>  <span class="c1"># adds 2 to it, and returns 12 to</span>
+</span><span class='line'>  <span class="c1"># the next iteration...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Passed a block:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">my_strings</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;hello &#39;</span><span class="p">,</span> <span class="s1">&#39;destiny &#39;</span><span class="p">,</span> <span class="s1">&#39;how &#39;</span><span class="p">,</span> <span class="s1">&#39;are &#39;</span><span class="p">,</span> <span class="s1">&#39;the &#39;</span><span class="p">,</span> <span class="s1">&#39;wife &#39;</span><span class="p">,</span> <span class="s1">&#39;and &#39;</span><span class="p">,</span> <span class="s1">&#39;kids?&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Passed a block</span>
+</span><span class='line'>  <span class="n">my_strings</span><span class="o">.</span><span class="n">inject</span> <span class="p">{</span> <span class="o">|</span><span class="n">sentence</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">sentence</span> <span class="o">+</span> <span class="n">word</span><span class="o">.</span><span class="n">capitalize</span> <span class="p">}</span>
+</span><span class='line'>  <span class="c1"># =&gt; &quot;hello Destiny How Are The Wife And Kids?&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Passed a block and an initial value</span>
+</span><span class='line'>  <span class="n">my_strings</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="s2">&quot;Oh, &quot;</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">sentence</span><span class="p">,</span> <span class="n">word</span><span class="o">|</span> <span class="n">sentence</span> <span class="o">+</span> <span class="n">word</span><span class="o">.</span><span class="n">capitalize</span> <span class="p">}</span>
+</span><span class='line'>  <span class="c1"># =&gt; &quot;Oh, Hello Destiny How Are The Wife And Kids?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So I accidentally came up with a better example than I thought for passing a block without an initial value since it demonstrates that nothing is done to the first object in the collection.  It is passed straight to the block execution for the next object in the collection as the memo object.</p>
+
+<p>There&rsquo;s one more layer to <code>#inject</code>.  <strong>The return value of the method execution is the return value of the last execution of the block</strong> , not the memo object.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="o">].</span><span class="n">inject</span> <span class="k">do</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">number</span><span class="o">|</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">number</span> <span class="o">!=</span> <span class="mi">5</span>
+</span><span class='line'>      <span class="n">sum</span> <span class="o">+=</span> <span class="n">number</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="c1"># =&gt; nil</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Since <code>if number != 5; sum +=5; end</code> returns nil when <code>number == 5</code>, the last object in the collection, the return value of the entire method is nil.  You could do something kinda ugly like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="o">].</span><span class="n">inject</span> <span class="k">do</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">number</span><span class="o">|</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">number</span> <span class="o">!=</span> <span class="mi">5</span>
+</span><span class='line'>      <span class="n">sum</span> <span class="o">+=</span> <span class="n">number</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">sum</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="c1"># =&gt; 10</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>but at that point maybe you&rsquo;re better off just using a different method like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">number</span><span class="o">|</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">number</span> <span class="o">!=</span> <span class="mi">5</span>
+</span><span class='line'>      <span class="n">sum</span> <span class="o">+=</span> <span class="n">number</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">sum</span>
+</span><span class='line'>  <span class="c1"># =&gt; 10</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At least it&rsquo;s a bit more obvious at first glance what you want back.</p>
+
+<h2>The Inspiration</h2>
+
+<p>Here&rsquo;s the cool bit that got me thinking about these method, specifically #inject.  I ran into a problem where I had a hash and I needed to return a hash with mutations applied to both the keys and values in the origional hash.  Changing values is easy.  Changing keys takes a bit more work.</p>
+
+<p>You could update the keys in place by iterate through the keys, create new mutated key and value pairs, and delete the old pair:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">markup</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">1</span>
+</span><span class='line'>  <span class="n">toys</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>          <span class="s2">&quot;rubber_ducky&quot;</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">,</span>
+</span><span class='line'>          <span class="s2">&quot;slinky&quot;</span>       <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>          <span class="s2">&quot;lawn_dart&quot;</span>    <span class="o">=&gt;</span> <span class="mi">7</span>
+</span><span class='line'>         <span class="p">}</span>
+</span><span class='line'>  <span class="n">toys</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">toys</span><span class="o">[</span><span class="nb">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">to_sym</span><span class="o">]</span> <span class="o">=</span> <span class="n">toys</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">*</span> <span class="n">markup</span>
+</span><span class='line'>    <span class="n">toys</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">toys</span>
+</span><span class='line'>  <span class="c1"># =&gt; {:RUBBER_DUCKY=&gt;5.5, :SLINKY=&gt;3.30..., :LAWN_DART=&gt;7.70...}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You could use the Enumerable#map method to pass arrays of key value pairs to the Hash literal:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">new_prices</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">[</span> <span class="n">toys</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">price</span><span class="o">|</span>
+</span><span class='line'>                      <span class="o">[</span><span class="nb">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="n">price</span> <span class="o">*</span> <span class="n">markup</span><span class="o">]</span>
+</span><span class='line'>                     <span class="k">end</span>
+</span><span class='line'>                    <span class="o">]</span>
+</span><span class='line'>  <span class="c1"># =&gt; {:RUBBER_DUCKY=&gt;5.5, :SLINKY=&gt;3.30..., :LAWN_DART=&gt;7.70...}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or you could use the inject method to pass around a hash and merge new key-value pairs into it.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">toys</span><span class="o">.</span><span class="n">inject</span><span class="p">({})</span> <span class="k">do</span> <span class="o">|</span><span class="n">newly_priced</span><span class="p">,</span> <span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">newly_priced</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span> <span class="nb">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">to_sym</span> <span class="o">=&gt;</span> <span class="n">price</span> <span class="o">*</span> <span class="n">markup</span> <span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="c1"># =&gt; {:RUBBER_DUCKY=&gt;5.5, :SLINKY=&gt;3.30..., :LAWN_DART=&gt;7.70...}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&rsquo;d be wary of mutating the origional array by mutating the keys, assigning the new keys values, and deleting the old keys.  If I were to use simple iteration to solve this problem I would probably instantiate a new hash and assign that hash key value pairs from within the each block.  Nothing fancy, but it works.</p>
+
+<p>Using the Hash literal and #map looks a bit odd to me.  I haven&rsquo;t seen anyone build hashes this way.  The #map inside of the Hash literal is confusing unless you recall that #map always returns an array and that passing arrays of two objects to the Hash literal creates key-value pairs.  This solution feels like it is asking a bit more of the next developer to come along than the other options.</p>
+
+<p>Now #inject&hellip; I like this one.  I like it despite the fact that <strong>IT ASKS A LOT!!!</strong> of the developers to follow and many things happens in very few lines, buuuuut it&rsquo;s a pretty slick peice of code.  And sometimes I <strong>am</strong> a sucker for a slick piece of code.  So, what does it assume?  Well, you have to know:</p>
+
+<p>&#9;1. What #injects is.</p>
+
+<p>&#9;2. That with #inject you have a memo object to pass to each execution of the block.</p>
+
+<p>&#9;3. That the key-value pairs in toys are passed into the block as an array.</p>
+
+<p>&#9;4. That you can use parenthesis and multiple assignment to make the block take only two arguements (the memo and the array containing the key and value) and instantly set the value of name and price.</p>
+
+<p>&#9;5. That the return value of the #inject method is the return value of the last execution of the block, so you have to return the hash object from the block.</p>
+
+<p>&#9;6. And finally, that you can add key-value pairs to a hash using the Hash#merge method, essentially taking the key-value assignment as a mini-hash and merging it into the existing hash. Maybe this would be a bit more clear: <code>newly_priced.merge( {name.upcase.to_sym =&gt; price * markup} )</code></p>
+
+<div id="performance"></div>
+
+
+<h2>Performance</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">N</span> <span class="o">=</span> <span class="mi">1_000_000</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">markup</span> <span class="o">=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">1</span>
+</span><span class='line'><span class="n">toys</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>        <span class="s2">&quot;rubber_ducky&quot;</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;slinky&quot;</span>       <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>        <span class="s2">&quot;lawn_dart&quot;</span>    <span class="o">=&gt;</span> <span class="mi">7</span>
+</span><span class='line'>       <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;benchmark&#39;</span>
+</span><span class='line'><span class="no">Benchmark</span><span class="o">.</span><span class="n">bmbm</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;#each&#39;</span><span class="p">){</span> <span class="n">N</span><span class="o">.</span><span class="n">times</span><span class="p">{</span>
+</span><span class='line'>                              <span class="n">toys</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+</span><span class='line'>                                <span class="n">toys</span><span class="o">[</span><span class="nb">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">to_sym</span><span class="o">]</span> <span class="o">=</span> <span class="n">toys</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">*</span> <span class="n">markup</span>
+</span><span class='line'>                                <span class="n">toys</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>                              <span class="k">end</span>
+</span><span class='line'>                              <span class="n">toys</span>
+</span><span class='line'>                            <span class="p">}</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;#each.with_object&#39;</span><span class="p">){</span> <span class="n">N</span><span class="o">.</span><span class="n">times</span><span class="p">{</span>
+</span><span class='line'>                                          <span class="n">toys</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">with_object</span><span class="p">({})</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">toy</span><span class="p">,</span> <span class="n">price</span><span class="p">),</span> <span class="n">newly_priced</span><span class="o">|</span>
+</span><span class='line'>                                            <span class="n">newly_priced</span><span class="o">[</span><span class="n">toy</span><span class="o">]</span> <span class="o">=</span> <span class="n">price</span> <span class="o">*</span> <span class="n">markup</span>
+</span><span class='line'>                                          <span class="k">end</span>
+</span><span class='line'>                                        <span class="p">}</span>
+</span><span class='line'>                                <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;#map/Hash Literal&#39;</span><span class="p">){</span> <span class="n">N</span><span class="o">.</span><span class="n">times</span><span class="p">{</span>
+</span><span class='line'>                                          <span class="n">new_prices</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">[</span>
+</span><span class='line'>                                                            <span class="n">toys</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">price</span><span class="o">|</span>
+</span><span class='line'>                                                              <span class="o">[</span><span class="nb">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">to_sym</span><span class="p">,</span> <span class="n">price</span> <span class="o">*</span> <span class="n">markup</span><span class="o">]</span>
+</span><span class='line'>                                                            <span class="k">end</span>
+</span><span class='line'>                                                           <span class="o">]</span>
+</span><span class='line'>                                        <span class="p">}</span>
+</span><span class='line'>                                <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">x</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;#inject&#39;</span><span class="p">){</span> <span class="n">N</span><span class="o">.</span><span class="n">times</span><span class="p">{</span>
+</span><span class='line'>                              <span class="n">toys</span><span class="o">.</span><span class="n">inject</span><span class="p">({})</span> <span class="k">do</span> <span class="o">|</span><span class="n">newly_priced</span><span class="p">,</span> <span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span><span class="o">|</span>
+</span><span class='line'>                                <span class="n">newly_priced</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span> <span class="nb">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">to_sym</span> <span class="o">=&gt;</span> <span class="n">price</span> <span class="o">*</span> <span class="n">markup</span> <span class="p">)</span>
+</span><span class='line'>                              <span class="k">end</span>
+</span><span class='line'>                              <span class="p">}</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#  Rehearsal -----------------------------------------------------</span>
+</span><span class='line'><span class="c1">#  #each               0.200000   0.000000   0.200000 (  0.198086)</span>
+</span><span class='line'><span class="c1">#  #each.with_object   0.590000   0.010000   0.600000 (  0.594112)</span>
+</span><span class='line'><span class="c1">#  #map/Hash Literal   0.380000   0.000000   0.380000 (  0.384121)</span>
+</span><span class='line'><span class="c1">#  #inject             0.300000   0.000000   0.300000 (  0.299615)</span>
+</span><span class='line'><span class="c1">#  -------------------------------------------- total: 1.480000sec</span>
+</span><span class='line'><span class="c1">#</span>
+</span><span class='line'><span class="c1">#                          user     system      total        real</span>
+</span><span class='line'><span class="c1">#  #each               0.180000   0.000000   0.180000 (  0.180199)</span>
+</span><span class='line'><span class="c1">#  #each.with_object   0.550000   0.000000   0.550000 (  0.553506)</span>
+</span><span class='line'><span class="c1">#  #map/Hash Literal   0.370000   0.000000   0.370000 (  0.373649)</span>
+</span><span class='line'><span class="c1">#  #inject             0.290000   0.000000   0.290000 (  0.295530)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ranked by quickest performance:</p>
+
+<p>&#9;1. #each</p>
+
+<p>&#9;2. #inject (1.6x #each)</p>
+
+<p>&#9;3. #map/Hash literal (2.1x #each)</p>
+
+<p>&#9;4. #each.with_object (3.1x #each)</p>
+
+<p>The #each statement takes it!  But I didn&rsquo;t expect to incur such a performance penalty using #each.with_object. 3.1x!  Ouch.  The slick looking #inject maybe isn&rsquo;t so slick, finishing in 1.6x what it took #each to complete.  Maybe because #each is such a common method it has been highly optimized?  I don&rsquo;t have the answer.  If speed is your game maybe the obvious route is the best.</p>
+
+<h2>Sources:</h2>
+
+<p><a href="http://ruby-doc.org/core-2.2.3/Object.html#method-i-tap">
+Ruby Docs - Tap
+</a>
+<a href="http://ruby-doc.org/core-2.2.3/Enumerable.html#method-i-each_with_object">
+Ruby Docs - Each with Object
+</a>
+<a href="http://ruby-doc.org/core-2.2.3/Enumerable.html#method-i-inject">
+Ruby Docs - Inject
+</a>
+<a href="http://www.bbs-software.com/blog/2013/11/22/rubys-injectreduce-and-each_with_object/" target="_blank">
+&ldquo;Ruby&rsquo;s inject/reduce and each_with_object&rdquo; - Keith R Bennet
+</a>
+<a href="http://phrogz.net/tap-vs-each_with_object">
+&ldquo;tap vs. each_with_object: tap is faster and less typing&rdquo; - Gavin Kistner
+</a>
+<a href="http://alexwilkinson.me/2014/02/15/inject_vs._each_with_object.html">
+&ldquo;Inject vs. Each_With_Object&rdquo; - Alex Wilkinson
+</a></p>
+
+<p><a href="http://alexwilkinson.me/2014/02/15/inject_vs._each_with_object.html">
+&ldquo;Inject vs. Each_With_Object&rdquo; - Alex Wilkinson
+</a></p>
+
+<p><a href="http://seejohncode.com/2012/01/02/ruby-tap-that/">
+&ldquo;Ruby - #tap that!&rdquo; - John Crepezzi (just glanced at this one but it looks worth a read)
+</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Keyword Arguments]]></title>

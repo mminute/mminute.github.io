@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://mminute.github.io/blog/2015/11/10/tap/</loc>
+    <lastmod>2015-11-10T11:54:16-05:00</lastmod>
+  </url>
+  <url>
     <loc>http://mminute.github.io/blog/2015/10/28/keyword-arguements/</loc>
     <lastmod>2015-10-28T16:49:10-04:00</lastmod>
   </url>
@@ -52,5 +56,8 @@
   </url>
   <url>
     <loc>http://mminute.github.io/blog/categories/flatiron-school/</loc>
+  </url>
+  <url>
+    <loc>http://mminute.github.io/posts/2/</loc>
   </url>
 </urlset>
