@@ -4,7 +4,7 @@
   <title><![CDATA[A PlanarFe Adventure]]></title>
   <link href="http://mminute.github.io/atom.xml" rel="self"/>
   <link href="http://mminute.github.io/"/>
-  <updated>2015-11-19T21:03:31-05:00</updated>
+  <updated>2015-11-19T21:07:58-05:00</updated>
   <id>http://mminute.github.io/</id>
   <author>
     <name><![CDATA[Mason Jennings]]></name>
@@ -126,7 +126,7 @@
 
 <h2>Enumerable#each_with_object</h2>
 
-<p>So this one is a bit different but kind of in the same vein. It&rsquo;s in the Enumerable module so we know that <code>#each_with_object</code> is called on some kind of collection, like an array or a hash, and iterates through the items in the collection, just like the plain-old <code>#each</code> method.  What puts <code>#each_with_object</code> in the family of <code>#tap</code> is the <code>...with_object</code> bit. It allows us to pass in an arbitrary object and return that object from the method. Where <code>#tap</code> is called on the object you wish to return, <code>#each_with_object</code> takes the return object as an arguement.  For me the inportance is the concept.  <strong>It couples the iteration and the return.</strong></p>
+<p>So this one is a bit different but kind of in the same vein. It&rsquo;s in the Enumerable module so we know that <code>#each_with_object</code> is called on some kind of collection, like an array or a hash, and iterates through the items in the collection, just like the plain-old <code>#each</code> method.  What puts <code>#each_with_object</code> in the family of <code>#tap</code> is the <code>...with_object</code> bit. It allows us to pass in an arbitrary object and return that object from the method. Where <code>#tap</code> is called on the object you wish to return, <code>#each_with_object</code> takes the return object as an argument.  For me the importance is the concept.  <strong>It couples the iteration and the return.</strong></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -175,7 +175,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><code>#inject</code> comes in two flavors, taking a symbol or a block, and each of those flavors can also optionally take an initial value as an arguement.  If no initial value is passed, the first object in the collection becomes the initial value by default.</p>
+<p><code>#inject</code> comes in two flavors, taking a symbol or a block, and each of those flavors can also optionally take an initial value as an argument.  If no initial value is passed, the first object in the collection becomes the initial value by default.</p>
 
 <h3>Passed a symbol:</h3>
 
@@ -302,7 +302,7 @@
 
 <h2>The Inspiration</h2>
 
-<p>Here&rsquo;s the cool bit that got me thinking about these method, specifically #inject.  I ran into a problem where I had a hash and I needed to return a hash with mutations applied to both the keys and values in the origional hash.  Changing values is easy.  Changing keys takes a bit more work.</p>
+<p>Here&rsquo;s the cool bit that got me thinking about these method, specifically #inject.  I ran into a problem where I had a hash and I needed to return a hash with mutations applied to both the keys and values in the original hash.  Changing values is easy.  Changing keys takes a bit more work.</p>
 
 <p>You could update the keys in place by iterate through the keys, create new mutated key and value pairs, and delete the old pair:</p>
 
@@ -361,11 +361,11 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I&rsquo;d be wary of mutating the origional array by mutating the keys, assigning the new keys values, and deleting the old keys.  If I were to use simple iteration to solve this problem I would probably instantiate a new hash and assign that hash key value pairs from within the each block.  Nothing fancy, but it works.</p>
+<p>I&rsquo;d be wary of mutating the original array by mutating the keys, assigning the new keys values, and deleting the old keys.  If I were to use simple iteration to solve this problem I would probably instantiate a new hash and assign that hash key value pairs from within the each block.  Nothing fancy, but it works.</p>
 
 <p>Using the Hash literal and #map looks a bit odd to me.  I haven&rsquo;t seen anyone build hashes this way.  The #map inside of the Hash literal is confusing unless you recall that #map always returns an array and that passing arrays of two objects to the Hash literal creates key-value pairs.  This solution feels like it is asking a bit more of the next developer to come along than the other options.</p>
 
-<p>Now #inject&hellip; I like this one.  I like it despite the fact that <strong>IT ASKS A LOT!!!</strong> of the developers to follow and many things happens in very few lines, buuuuut it&rsquo;s a pretty slick peice of code.  And sometimes I <strong>am</strong> a sucker for a slick piece of code.  So, what does it assume?  Well, you have to know:</p>
+<p>Now #inject&hellip; I like this one.  I like it despite the fact that <strong>IT ASKS A LOT!!!</strong> of the developers to follow and many things happens in very few lines, buuuuut it&rsquo;s a pretty slick piece of code.  And sometimes I <strong>am</strong> a sucker for a slick piece of code.  So, what does it assume?  Well, you have to know:</p>
 
 <p>&#9;1. What #injects is.</p>
 
@@ -373,7 +373,7 @@
 
 <p>&#9;3. That the key-value pairs in toys are passed into the block as an array.</p>
 
-<p>&#9;4. That you can use parenthesis and multiple assignment to make the block take only two arguements (the memo and the array containing the key and value) and instantly set the value of name and price.</p>
+<p>&#9;4. That you can use parenthesis and multiple assignment to make the block take only two arguments (the memo and the array containing the key and value) and instantly set the value of name and price.</p>
 
 <p>&#9;5. That the return value of the #inject method is the return value of the last execution of the block, so you have to return the hash object from the block.</p>
 
