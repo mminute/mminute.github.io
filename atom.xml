@@ -4,7 +4,7 @@
   <title><![CDATA[A PlanarFe Adventure]]></title>
   <link href="http://mminute.github.io/atom.xml" rel="self"/>
   <link href="http://mminute.github.io/"/>
-  <updated>2015-11-19T21:07:58-05:00</updated>
+  <updated>2016-07-10T19:22:47-07:00</updated>
   <id>http://mminute.github.io/</id>
   <author>
     <name><![CDATA[Mason Jennings]]></name>
@@ -14,9 +14,547 @@
 
   
   <entry>
+    <title type="html"><![CDATA[JS Curry]]></title>
+    <link href="http://mminute.github.io/blog/2016/06/20/js-curry/"/>
+    <updated>2016-06-20T21:43:00-07:00</updated>
+    <id>http://mminute.github.io/blog/2016/06/20/js-curry</id>
+    <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/SoMuchCurry.png" width="600" alt="SoMuchCurry"></p>
+
+<p>Now that I&rsquo;m become firmly entrenched in the Javascript world, I figured it was high time that I read &lsquo;<a href="https://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742/ref=sr_1_1?s=books&ie=UTF8&qid=1467594140&sr=1-1&keywords=javascript+the+good+parts">The Good Parts</a>&rsquo;.  Since I&rsquo;m working in React, and since React is just just Javascript, it wasn&rsquo;t too hard to get through, though one exercise took me a bit to get my head around - <strong> <em>Curry.</em> </strong></p>
+
+<!--more-->
+
+
+<p>First off, I always want to say &lsquo;Currying&rsquo; because, it seems to me, that the whole point is to take a function an apply the Curry technique to it, thereby &lsquo;Currying&rsquo; the function.  It just feels like it needs an &lsquo;ing&rsquo;.  But I suppose that is neither here nor there.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>!(here || there)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The real sticking point for me has been finding examples of real-world applications for currying, something to which I might be able to relate, but these seem to be few and far between.  StackOverflow let me down in this department, but <a href="https://www.reddit.com/r/programming/comments/181y2a/what_is_the_advantage_of_currying/" target="_blank">Reddit</a> seems to have gotten a bit closer(?)  Almost every other example I ran across when reading about currying was some form of addition.  Exciting, right? &ldquo;Hey!  Look!  We built a function that you can pass a number to, and now every other time you call that function and pass it a number you will get back the sum of the very first and very latest number!  Woot!&rdquo;</p>
+
+<p>Then, as an extra rub, there is something called &lsquo;Partial Application&rsquo; which feels pretty similar but is technically different.  So, let&rsquo;s start off by looking at some definitions (Courtesy of <a href="https://medium.com/javascript-scene/curry-or-partial-application-8150044c78b8#.a2rbilqeg" target="_blank">Eric Elliott</a>.  Is it really courtesy when the person has no idea that you&rsquo;re straight lifting their ish?  Maybe there&rsquo;s an informal definition.  Note to self, google later):</p>
+
+<h3>Curry</h3>
+
+<blockquote>
+A function that takes a function with multiple parameters as input and returns a function with exactly one parameter.
+</blockquote>
+
+
+<h3>Partial Application</h3>
+
+<blockquote>
+... a function that takes a function with multiple parameters and returns a function with fewer parameters.  Partial application fixes (partially applies the function to) one or more arguments inside the returned function, and the returned function takes the remaining parameters as arguments in order to complete the function application.
+</blockquote>
+
+
+<p>So, the difference is that (again, thanks to <a href="https://medium.com/javascript-scene/curry-or-partial-application-8150044c78b8#.a2rbilqeg" target="_blank">Eric Elliott</a>):</p>
+
+<blockquote>
+A curried function always returns another function with an arity of 1 until all of the arguments have been applied.
+</blockquote>
+
+
+<p>Whereas</p>
+
+<blockquote>
+A partial application may or may not have a predictable return type.
+</blockquote>
+
+
+<h2>So let&rsquo;s do this</h2>
+
+<p>So the idea is that we have a function that takes <code>n</code> arguments, but we don&rsquo;t have all <code>n</code> arguments to hand at the moment.</p>
+
+<p>&hellip; Fuck it, let&rsquo;s add, &lsquo;cause I&rsquo;m not that creative and I can&rsquo;t think of a better simple example at the moment.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">+</span> <span class="nx">c</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We have an <code>add</code> function that expects three arguments, but let&rsquo;s say we only have one at the moment.  We could save it to a variable, then save the second, then, when we have the third, finally call the function and pass along the three required arguments.  Or, we can encapsulate the the data along with the logic into a deliciously curried dish.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">+</span> <span class="nx">c</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">curriedAdd</span><span class="p">(</span><span class="nx">a</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We&rsquo;ve created a closure. We can shove the variables <code>a</code>, <code>b</code>, and <code>c</code> into the closure, forget about them, and not have to worry about about mutating them somehow from outside out curried function.</p>
+
+<p>To get the result out we just pass in our arguments one by one.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">let</span> <span class="nx">adder</span> <span class="o">=</span> <span class="nx">curriedAdd</span><span class="p">;</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">adder</span><span class="p">);</span> <span class="c1">// function curriedAdd(a){...}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So we have a function that accepts one argument, aka a function with an arity of 1, so we&rsquo;re following the definition of curry.  We then feed in the first argument and get back another function with an arity of 1, pass in the second argument, get back a function with arity = 1, then pass in the final argument and getting back the expected return value.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">let</span> <span class="nx">adderA</span> <span class="o">=</span> <span class="nx">adder</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">adderA</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// function(b) {return function(c) {add(a, b, c);}}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">let</span> <span class="nx">adderB</span> <span class="o">=</span> <span class="nx">adderA</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">adderB</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// function(c) {add(a, b, c);}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">let</span> <span class="nx">adderC</span> <span class="o">=</span> <span class="nx">adderB</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">adderC</span><span class="p">);</span> <span class="c1">// 6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or, more concisely</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">curriedAdd</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>To Generalize</h2>
+
+<p>Now that we can curry a specific function, let&rsquo;s figure out how to curry any function that takes multiple arguments.</p>
+
+<p>We first define a function that takes another function as an argument, the function we want to curry and pass arguments to singly.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We know that we need to do something until all the required arguments to execute our function, say our <code>add</code> function are present.  First thing is first, how many arguments are we waiting for?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">func</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">curry</span><span class="p">(</span><span class="nx">add</span><span class="p">);</span> <span class="c1">// 3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can make our <code>curry</code> function figure out how many arguments the function it is passed is expecting and change the behavior based on whether we have collected enough arguments to run the function.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span> <span class="nx">curried</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">func</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Got all the arguments I need!&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Still waiting for more args&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And look!  We get to play with ES6&rsquo;s sweet little <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator" target="_blank"><em>spread operator</em></a>.  Here, if <code>curried</code> is passed <code>n</code> number of arguments the spread operator collects them up into a single array, just in case we cheat and pass multiple arguments instead of one at a time as we should when currying (arity of 1 and all), then we check the length of the resulting array.  If we have the requisite number of arguments to run our function, we do so.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span> <span class="nx">curried</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// When a list of arguments is passed to curried</span>
+</span><span class='line'>    <span class="c1">// they are collected into an array</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">func</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// If all the arguments are provided,</span>
+</span><span class='line'>      <span class="c1">// pass `args` into the function to be curried and</span>
+</span><span class='line'>      <span class="c1">// &#39;spread&#39; the `args` array into a list of argument</span>
+</span><span class='line'>      <span class="c1">// func(...args) becomes func(args[0], args[1], args[2]) and so on...</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">func</span><span class="p">(...</span><span class="nx">args</span><span class="p">);</span>
+</span><span class='line'>      <span class="c1">// This is also equivalent to `func.apply(undefined, [arrayOfArgs])`</span>
+</span><span class='line'>      <span class="c1">// if you were to write in ES5</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Still waiting for more args&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Spread Operator <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Syntax" target="_blank">Syntax</a></h2>
+
+<h4>For function calls:</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">myFunction</span><span class="p">(...</span><span class="nx">iterableObj</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>For array literals:</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="kr">const</span> <span class="nx">miniArray</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">[...</span><span class="nx">miniArray</span><span class="p">,</span> <span class="s1">&#39;simple&#39;</span><span class="p">,</span> <span class="s1">&#39;as&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;simple&#39;</span><span class="p">,</span> <span class="s1">&#39;as&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Back to the show!</h2>
+
+<p>OK, so we know what to do if we&rsquo;ve managed to collect all our arguments, but what if we don&rsquo;t have them all yet?  We want to return a function with an arity of 1 that takes it&rsquo;s only argument, checks if it has enough arguments, executes the original function if it does, returns a function with an arity of 1 if it doesn&rsquo;t&hellip; Sounds recursive to me!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span> <span class="nx">curried</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">func</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">func</span><span class="p">(...</span><span class="nx">args</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newArg</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+</span><span class='line'>          <span class="err">`</span><span class="nx">I</span> <span class="nx">have</span> <span class="nx">a</span> <span class="k">new</span> <span class="nx">argument</span> <span class="nx">called</span> <span class="s1">&#39;newArg&#39;</span><span class="err">`</span> <span class="o">+</span>
+</span><span class='line'>          <span class="err">`</span><span class="nx">as</span> <span class="nx">well</span> <span class="nx">as</span> <span class="nx">access</span> <span class="nx">to</span> <span class="s1">&#39;args&#39;</span> <span class="nx">from</span> <span class="nx">above</span><span class="err">`</span>
+</span><span class='line'>        <span class="p">)</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>From here we recursively call <code>curried</code> and pass it the new argument as well as all the arguments already collected.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span> <span class="nx">curried</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">func</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">func</span><span class="p">(...</span><span class="nx">args</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newArg</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">curried</span><span class="p">(...[...</span><span class="nx">args</span><span class="p">,</span> <span class="nx">newArg</span><span class="p">]);</span>
+</span><span class='line'>        <span class="c1">// We spread `args` into an array along with the newArg</span>
+</span><span class='line'>        <span class="c1">// =&gt; [args[0], args[1], newArg]</span>
+</span><span class='line'>        <span class="c1">// Then spread this array into a list of separate arguments</span>
+</span><span class='line'>        <span class="c1">// which get passed to the `curried` function</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And cleaned up just a bit&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span> <span class="nx">curried</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">func</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">func</span><span class="p">(...</span><span class="nx">args</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">curried</span><span class="p">(...[...</span><span class="nx">args</span><span class="p">,</span> <span class="nx">a</span><span class="p">])</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There! We created the ability to curry any function we like!</p>
+
+<h3>Another Use</h3>
+
+<p>But just using curry to pass in arguments sequentially as they are available is boring.  Maybe applying curry for reusability might make a more interesting or compelling argument.  <a href="https://www.sitepoint.com/author/mdavidgreen/" target="_blank">M. David Green</a> offers an example where multiple outputs require some shared data, but other pieces of data are different.  Here we have a function that returns a greeting:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="kd">var</span> <span class="nx">greetDeeplyCurried</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">greeting</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">separator</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">emphasis</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">greeting</span> <span class="o">+</span> <span class="nx">separator</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="nx">emphasis</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">};</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Order matters here.  You place the most common data as the first arguments, something like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// greetDeeplyCurried(greeting)(separator)(emphasis)(name)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>then pass in the unique arguments further down the line to improve reusability.  The thing that is most likely to change from case to case should be last.  Here it is the name.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// greetDeeplyCurried(greeting)(separator)(emphasis)(name)</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">greetAwkwardly</span> <span class="o">=</span> <span class="nx">greetDeeplyCurried</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)(</span><span class="s2">&quot;...&quot;</span><span class="p">)(</span><span class="s2">&quot;?&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">greetAwkwardly</span><span class="p">(</span><span class="s2">&quot;Heidi&quot;</span><span class="p">);</span> <span class="c1">//&quot;Hello...Heidi?&quot;</span>
+</span><span class='line'>  <span class="nx">greetAwkwardly</span><span class="p">(</span><span class="s2">&quot;Eddie&quot;</span><span class="p">);</span> <span class="c1">//&quot;Hello...Eddie?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>greetAwkwardly</code> forms a closure around the greeting, separator, and emphasis, and returns a function that can be reused for multiple names.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="kd">var</span> <span class="nx">sayHello</span> <span class="o">=</span> <span class="nx">greetDeeplyCurried</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)(</span><span class="s2">&quot;, &quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">sayHello</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)(</span><span class="s2">&quot;Heidi&quot;</span><span class="p">);</span> <span class="c1">//&quot;Hello, Heidi.&quot;</span>
+</span><span class='line'>  <span class="nx">sayHello</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)(</span><span class="s2">&quot;Eddie&quot;</span><span class="p">);</span> <span class="c1">//&quot;Hello, Eddie.&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">askHello</span> <span class="o">=</span> <span class="nx">sayHello</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">askHello</span><span class="p">(</span><span class="s2">&quot;Heidi&quot;</span><span class="p">);</span> <span class="c1">//&quot;Hello, Heidi?&quot;</span>
+</span><span class='line'>  <span class="nx">askHello</span><span class="p">(</span><span class="s2">&quot;Eddie&quot;</span><span class="p">);</span> <span class="c1">//&quot;Hello, Eddie?&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Opinion</h2>
+
+<p>I don&rsquo;t know if I&rsquo;ll ever actually use curry.  I haven&rsquo;t run into it myself and it adds a bit of indirection.  This exercise has, however, been useful in reinforcing the power of closures and, unexpectedly, made me take a closer look at the <code>spread operator</code>.</p>
+
+<p>One issue with curry that has been nagging at me, mostly because of all the addition examples, is that they frame the problem as knowing that you need a certain number of arguments, but not having them immediately available.  Curry lets us form a closure around the values and pass in the remaining arguments as they come along.  But what if the order of the arguments matter, like with the greeting example above?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// greetDeeplyCurried(greeting)(separator)(emphasis)(name)</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">sayHello</span> <span class="o">=</span> <span class="nx">greetDeeplyCurried</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)(</span><span class="s2">&quot;, &quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">waitingForName</span> <span class="o">=</span> <span class="nx">sayHello</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">waitingForName</span><span class="p">(</span><span class="s1">&#39;Heidi&#39;</span><span class="p">);</span> <span class="c1">//&quot;Hello, Heidi.&quot; </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What if you don&rsquo;t know in what order the arguments will arrive?  It <em>wouldn&rsquo;t</em> be very useful to have something like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="c1">// greetDeeplyCurried(greeting)(separator)(emphasis)(name)</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">sayHello</span> <span class="o">=</span> <span class="nx">greetDeeplyCurried</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)(</span><span class="s2">&quot;, &quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">// Waiting on an input and receive &#39;Heidi&#39;</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">waitingForName</span> <span class="o">=</span> <span class="nx">sayHello</span><span class="p">(</span><span class="s1">&#39;Heidi&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">// Waiting on an input and receive &#39;.&#39;</span>
+</span><span class='line'>  <span class="nx">waitingForName</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span> <span class="c1">//&quot;Hello, .Heidi&quot; </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Maybe you solve it with option parameters, which might look like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">difference</span><span class="p">(</span><span class="nx">a1</span><span class="p">,</span> <span class="nx">a2</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">a1</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">a2</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">a1</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">a1</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="c1">// Lo-Dash and underscore both have array difference</span>
+</span><span class='line'><span class="c1">// functions to use instead of the above</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">requiredArgs</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span> <span class="nx">curried</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kr">const</span> <span class="nx">optionArgs</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+</span><span class='line'>    <span class="kr">const</span> <span class="nx">unfulfilledArgs</span> <span class="o">=</span> <span class="nx">difference</span><span class="p">(</span><span class="nx">requiredArgs</span><span class="p">,</span> <span class="nx">optionArgs</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">unfulfilledArgs</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">func</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newOption</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">curried</span><span class="p">({...</span><span class="nx">options</span><span class="p">,</span> <span class="p">...</span><span class="nx">newOption</span><span class="p">})</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kr">const</span> <span class="nx">myFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">args</span><span class="p">){</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">args</span><span class="p">)}</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">myCurriedFunction</span> <span class="o">=</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">myFunction</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span><span class="s1">&#39;world&#39;</span><span class="p">]);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myCurriedFunction</span><span class="p">({</span><span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">}));</span> <span class="c1">// function(newOption){...}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">myCurriedFunction</span><span class="p">({</span><span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">})({</span><span class="nx">world</span><span class="o">:</span><span class="s1">&#39;hello&#39;</span><span class="p">});</span> <span class="c1">//{&quot;hello&quot;:&quot;world&quot;,&quot;world&quot;:&quot;hello&quot;}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Maybe this is a misuse of curry altogether and you skip all that to focus on reusability and ignore any kind of asynchronous cases where you don&rsquo;t have tight control over the order the curried function receives arguments.</p>
+
+<h2>Sources:</h2>
+
+<p><a href="https://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742/ref=sr_1_1?s=books&ie=UTF8&qid=1467594140&sr=1-1&keywords=javascript+the+good+parts" target="_blank">
+JavaScript: The Good Parts by Douglas Crockford
+</a>
+<a href="https://www.youtube.com/watch?v=eZ5w5MYP3C0" target="_blank">
+WatchMeCode: Currying Functions in JavaScript
+</a>
+<a href="https://www.youtube.com/watch?v=jJAxhVxaHMM" target="_blank">
+WatchMeCode: Build Your Own Curry Function in JavaScript
+</a>
+<a href="https://medium.com/javascript-scene/curry-or-partial-application-8150044c78b8#.9el6e7wcz" target="_blank">
+Curry or Partial Application? by Eric Elliott
+</a>
+<a href="https://www.reddit.com/r/programming/comments/181y2a/what_is_the_advantage_of_currying/" target="_blank">
+Reddit- What is the advantage of currying?
+</a>
+<a href="http://www.datchley.name/currying-vs-partial-application/" target="_blank">
+Currying vs Partial Application by Dave Atchley
+</a>
+<a href="https://www.sitepoint.com/currying-in-functional-javascript/" target="_blank">
+A Beginner’s Guide to Currying in Functional JavaScript by M. David Green
+</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Tap, Inject, and Each_With_Object]]></title>
     <link href="http://mminute.github.io/blog/2015/11/10/tap/"/>
-    <updated>2015-11-10T11:54:16-05:00</updated>
+    <updated>2015-11-10T08:54:16-08:00</updated>
     <id>http://mminute.github.io/blog/2015/11/10/tap</id>
     <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/beerTaps.jpg" width="600" alt="http://live2eat.typepad.com/.a/6a014e8968623c970d017d42a40c16970c-pi"></p>
 
@@ -237,7 +775,7 @@
 
 <p>So I accidentally came up with a better example than I thought for passing a block without an initial value since it demonstrates that nothing is done to the first object in the collection.  It is passed straight to the block execution for the next object in the collection as the memo object.</p>
 
-<p>There&rsquo;s one more layer to <code>#inject</code>.  <strong>The return value of the method execution is the return value of the last execution of the block</strong> , not the memo object.</p>
+<p>There&rsquo;s one more layer to <code>#inject</code>.  <strong>The return value of the method execution is the return value of the last execution of the block</strong>, not the memo object.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -367,7 +905,7 @@
 
 <p>Now #inject&hellip; I like this one.  I like it despite the fact that <strong>IT ASKS A LOT!!!</strong> of the developers to follow and many things happens in very few lines, buuuuut it&rsquo;s a pretty slick piece of code.  And sometimes I <strong>am</strong> a sucker for a slick piece of code.  So, what does it assume?  Well, you have to know:</p>
 
-<p>&#9;1. What #injects is.</p>
+<p>&#9;1. What #inject is.</p>
 
 <p>&#9;2. That with #inject you have a memo object to pass to each execution of the block.</p>
 
@@ -532,10 +1070,6 @@ Ruby Docs - Inject
 &ldquo;Inject vs. Each_With_Object&rdquo; - Alex Wilkinson
 </a></p>
 
-<p><a href="http://alexwilkinson.me/2014/02/15/inject_vs._each_with_object.html">
-&ldquo;Inject vs. Each_With_Object&rdquo; - Alex Wilkinson
-</a></p>
-
 <p><a href="http://seejohncode.com/2012/01/02/ruby-tap-that/">
 &ldquo;Ruby - #tap that!&rdquo; - John Crepezzi (just glanced at this one but it looks worth a read)
 </a></p>
@@ -545,7 +1079,7 @@ Ruby Docs - Inject
   <entry>
     <title type="html"><![CDATA[Keyword Arguments]]></title>
     <link href="http://mminute.github.io/blog/2015/10/28/keyword-arguements/"/>
-    <updated>2015-10-28T16:49:10-04:00</updated>
+    <updated>2015-10-28T13:49:10-07:00</updated>
     <id>http://mminute.github.io/blog/2015/10/28/keyword-arguements</id>
     <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/argument.jpg" width="400"></p>
 
@@ -750,7 +1284,7 @@ Ruby Docs - Inject
   <entry>
     <title type="html"><![CDATA[A New Hash#map]]></title>
     <link href="http://mminute.github.io/blog/2015/10/19/hash-map/"/>
-    <updated>2015-10-19T11:57:32-04:00</updated>
+    <updated>2015-10-19T08:57:32-07:00</updated>
     <id>http://mminute.github.io/blog/2015/10/19/hash-map</id>
     <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/NY_Map.jpg" width="400" alt="https://www.etsy.com/shop/bananastrudel?ref=l2-shopheader-name"></p>
 
@@ -894,7 +1428,7 @@ Chris Holtz- Let&rsquo;s Make a Ruby Hash Map Method That Returns a Hash Instead
   <entry>
     <title type="html"><![CDATA[Everyday Rails: Testing With RSpec]]></title>
     <link href="http://mminute.github.io/blog/2015/09/23/everyday-rails-testing-with-rspec/"/>
-    <updated>2015-09-23T14:00:46-04:00</updated>
+    <updated>2015-09-23T11:00:46-07:00</updated>
     <id>http://mminute.github.io/blog/2015/09/23/everyday-rails-testing-with-rspec</id>
     <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/pirates.jpg" /></p>
 
@@ -2031,7 +2565,7 @@ to see result of previous step in spec insert ‘save_and_open_page’ into spec
   <entry>
     <title type="html"><![CDATA[If You Want to Ace the Interview, You've Got to Break a Few Eggs: The Two Egg Problem]]></title>
     <link href="http://mminute.github.io/blog/2015/09/13/two-egg-problem/"/>
-    <updated>2015-09-13T15:56:08-04:00</updated>
+    <updated>2015-09-13T12:56:08-07:00</updated>
     <id>http://mminute.github.io/blog/2015/09/13/two-egg-problem</id>
     <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/lucky_egg.gif" alt="Cool Runnings Lucky Egg"></p>
 
@@ -2090,7 +2624,7 @@ There is a 100 story building.  You have two identical eggs.  An egg, when dropp
   <entry>
     <title type="html"><![CDATA[]]></title>
     <link href="http://mminute.github.io/blog/2015/08/24/finite-state-machines/"/>
-    <updated>2015-08-24T14:52:25-04:00</updated>
+    <updated>2015-08-24T11:52:25-07:00</updated>
     <id>http://mminute.github.io/blog/2015/08/24/finite-state-machines</id>
     <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/THESTATEMTVLOGO.png" width="400"></p>
 
@@ -2270,7 +2804,7 @@ Finite State Machine Applications
   <entry>
     <title type="html"><![CDATA[I Didn't Write a Blog Post for Today So Here Are Some Pictures of Animals]]></title>
     <link href="http://mminute.github.io/blog/2015/08/11/i-didnt-write-a-blog-post-for-today-so-here-are-some-pictures-of-animals/"/>
-    <updated>2015-08-11T08:46:08-04:00</updated>
+    <updated>2015-08-11T05:46:08-07:00</updated>
     <id>http://mminute.github.io/blog/2015/08/11/i-didnt-write-a-blog-post-for-today-so-here-are-some-pictures-of-animals</id>
     <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/siberian-hamster-pic-so-cute-animal-pictures-image-600x472.jpg" /></p>
 
@@ -2296,7 +2830,7 @@ Finite State Machine Applications
   <entry>
     <title type="html"><![CDATA[3Dify Yourself: Three.js]]></title>
     <link href="http://mminute.github.io/blog/2015/07/25/3dify-yourself-three-dot-js/"/>
-    <updated>2015-07-25T18:23:44-04:00</updated>
+    <updated>2015-07-25T15:23:44-07:00</updated>
     <id>http://mminute.github.io/blog/2015/07/25/3dify-yourself-three-dot-js</id>
     <content type="html"><![CDATA[<p><img src="http://mminute.github.io/images/french-bulldog-with-3d-glasses-retales-botijero.png" /></p>
 
@@ -2509,7 +3043,7 @@ Finite State Machine Applications
   <entry>
     <title type="html"><![CDATA[Primes With Regex]]></title>
     <link href="http://mminute.github.io/blog/2015/07/08/primes-with-regex/"/>
-    <updated>2015-07-08T09:04:52-04:00</updated>
+    <updated>2015-07-08T06:04:52-07:00</updated>
     <id>http://mminute.github.io/blog/2015/07/08/primes-with-regex</id>
     <content type="html"><![CDATA[<p>I ran across a blog post explaining how you can use regular expressions to determine if a number is prime.  It seems like an odd use and it has been a while (kinda? Like four whole weeks!) since I’ve used regular expressions so it took a a bit of time and a whole lot of whiteboard space to figure out what was happening so this is the post topic that you’re getting god dammit!</p>
 
@@ -2666,7 +3200,7 @@ No!  Why would you determine primes using a string like some kind of asshole?  C
   <entry>
     <title type="html"><![CDATA[How to Build a Valueless Gem]]></title>
     <link href="http://mminute.github.io/blog/2015/06/27/how-to-build-a-valueless-gem/"/>
-    <updated>2015-06-27T21:27:11-04:00</updated>
+    <updated>2015-06-27T18:27:11-07:00</updated>
     <id>http://mminute.github.io/blog/2015/06/27/how-to-build-a-valueless-gem</id>
     <content type="html"><![CDATA[<p><img src="http://www.nysun.com/pics/6372.jpg" width="500" height="500" title="Tracy Hall" alt="H. Tracy Hall with his synthetic diamond machine."></p>
 
@@ -2955,7 +3489,7 @@ No!  Why would you determine primes using a string like some kind of asshole?  C
   <entry>
     <title type="html"><![CDATA[ENIAC Wasn't First?...]]></title>
     <link href="http://mminute.github.io/blog/2015/06/16/eniac-wasnt-first-dot-dot-dot/"/>
-    <updated>2015-06-16T19:13:20-04:00</updated>
+    <updated>2015-06-16T16:13:20-07:00</updated>
     <id>http://mminute.github.io/blog/2015/06/16/eniac-wasnt-first-dot-dot-dot</id>
     <content type="html"><![CDATA[<p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Frontal_view_of_the_reconstructed_Colossus_at_The_National_Museum_of_Computing%2C_Bletchley_Park.jpg"></p>
 
@@ -3020,7 +3554,7 @@ This isn’t a scholarly work so I’m not going to go back and cite anything, b
   <entry>
     <title type="html"><![CDATA[When Constants Are NOT Constant]]></title>
     <link href="http://mminute.github.io/blog/2015/06/04/my-first-post-on-octopress/"/>
-    <updated>2015-06-04T21:34:41-04:00</updated>
+    <updated>2015-06-04T18:34:41-07:00</updated>
     <id>http://mminute.github.io/blog/2015/06/04/my-first-post-on-octopress</id>
     <content type="html"><![CDATA[<p>The speed of light.</p>
 
